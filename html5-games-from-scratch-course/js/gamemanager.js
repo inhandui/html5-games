@@ -2,6 +2,14 @@
 var canvas; //used to manage canvas 
 var context; //used to create context elements
 var spriteSheet; //used to store the game sprite sheet 
+//player object 
+var player = {
+    x:50,
+    y:100,
+    pacmouth:320,
+    pacdirection:0
+//    psize:32
+}
 
 /* function to setup the Game Manager */
 function setup() {
@@ -35,5 +43,17 @@ function playGame(){
 function render(){
     context.fillStyle = 'blue';
     context.fillRect(0,0, canvas.width, canvas.height);
-    context.drawImage(spriteSheet, 10, 10);
+    /* 
+        Function drawImage() parameters:
+        img	    - Specifies the image, canvas, or video element to use	 
+        sx	    - Optional. The x coordinate where to start clipping	
+        sy	    - Optional. The y coordinate where to start clipping	
+        swidth  - Optional. The width of the clipped image	
+        sheight	- Optional. The height of the clipped image	
+        x	    - The x coordinate where to place the image on the canvas	
+        y	    - The y coordinate where to place the image on the canvas	
+        width	- Optional. The width of the image to use (stretch or reduce the image)	
+        height	- Optional. The height of the image to use (stretch or reduce the image)
+    */
+    context.drawImage(spriteSheet, player.pacmouth, player.pacdirection, 32, 32, player.x, player.y, 32,32);
 }
