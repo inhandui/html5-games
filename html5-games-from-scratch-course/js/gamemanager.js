@@ -1,7 +1,9 @@
 /* Global Game Manager Variables */
-var canvas; //used to manage canvas 
-var context; //used to create context elements
-var spriteSheet; //used to store the game sprite sheet 
+var canvas; //Used to manage canvas 
+var context; //Used to create context elements
+var spriteSheet; //Used to store the game sprite sheet 
+var score; //Used to store the pacman scores
+var gscore; //Used to store the ghosts scores
 //player object 
 var player = {
     x:50,
@@ -13,6 +15,10 @@ var player = {
 
 /* function to setup the Game Manager */
 function setup() {
+    /* Set game score */
+    score = 0;
+    gscore = 0;
+    
     /* Creating the canvas */
     canvas = document.createElement("canvas");
     context = canvas.getContext('2d');
@@ -56,4 +62,7 @@ function render(){
         height	- Optional. The height of the image to use (stretch or reduce the image)
     */
     context.drawImage(spriteSheet, player.pacmouth, player.pacdirection, 32, 32, player.x, player.y, 32,32);
+    context.font = "20px Verdana";
+    context.fillStyle = "white";
+    context.fillText("Pacman: " + score + " vs Ghosts " + gscore, 2, 18);
 }
