@@ -4,16 +4,28 @@ var context; //Used to create context elements
 var spriteSheet; //Used to store the game sprite sheet 
 var score; //Used to store the pacman scores
 var gscore; //Used to store the ghosts scores
-//player object 
-var player = {
+var player = { //Player object 
     x:50,
     y:100,
     pacmouth:320,
     pacdirection:0
 //    psize:32
-}
+} 
+var keyEvent = {}; //Used to capture key events
 
-/* function to setup the Game Manager */
+/* Event listeners functions */
+//capturing the keydown event 
+document.addEventListener("keydown", function KDown(event){
+    keyEvent[event.keyCode] = true;
+    console.log(keyEvent)
+}, false);
+
+//capturing the keyup event
+document.addEventListener("keyup", function kUp(event){
+    delete keyEvent[event.keyCode];
+}, false);
+
+/* Function to setup the Game Manager */
 function setup() {
     /* Set game score */
     score = 0;
@@ -29,7 +41,7 @@ function setup() {
     spriteSheet = document.getElementById("pac");
     spriteSheet.onload = checkReady();
     
-    /* append canvas to document body element*/
+    /* Append canvas to document body element */
     document.body.appendChild(canvas);
 }
 
@@ -47,7 +59,7 @@ function playGame(){
 
 /* Function to render elements in canvas */
 function render(){
-    context.fillStyle = 'blue';
+    context.fillStyle = "black";
     context.fillRect(0,0, canvas.width, canvas.height);
     /* 
         Function drawImage() parameters:
