@@ -8,7 +8,8 @@ var player = { //Player object
     x:50,
     y:100,
     pacmouth:320,
-    pacdirection:0
+    pacdirection:0,
+    speed:5
 //    psize:32
 } 
 var keyEvent = {}; //Used to capture key events
@@ -17,13 +18,34 @@ var keyEvent = {}; //Used to capture key events
 //capturing the keydown event 
 document.addEventListener("keydown", function KDown(event){
     keyEvent[event.keyCode] = true;
-    console.log(keyEvent)
+    move(keyEvent);
 }, false);
 
 //capturing the keyup event
 document.addEventListener("keyup", function kUp(event){
     delete keyEvent[event.keyCode];
 }, false);
+
+/* Player movement functions */
+function move(keyEvent){
+    if(37 in keyEvent){ //User pressed left key
+        player.x -= player.speed;
+        player.pacdirection=64;
+    }
+    if(38 in keyEvent){ //User pressed up key
+        player.y -= player.speed;
+        player.pacdirection=96;
+    }
+    if(39 in keyEvent){ //User pressed right key
+        player.x += player.speed;
+        player.pacdirection=0;
+    }
+    if(40 in keyEvent){ //User pressed down key
+        player.y += player.speed;
+        player.pacdirection=32;
+    }
+    render();
+}
 
 /* Function to setup the Game Manager */
 function setup() {
