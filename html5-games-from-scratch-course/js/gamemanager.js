@@ -49,7 +49,7 @@ function move(keyEvent){
     if (player.x >= (canvas.width-32)){
         player.x = 0;
     }
-    if (player.y >= (canvas.width-32)){
+    if (player.y >= (canvas.height-32)){
         player.y = 0;
     }
     if (player.x < 0){
