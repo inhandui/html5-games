@@ -26,24 +26,46 @@ document.addEventListener("keyup", function kUp(event){
     delete keyEvent[event.keyCode];
 }, false);
 
-/* Player movement functions */
+/* Player movement function */
 function move(keyEvent){
-    if(37 in keyEvent){ //User pressed left key
+    if (37 in keyEvent){ //User pressed left key
         player.x -= player.speed;
         player.pacdirection=64;
     }
-    if(38 in keyEvent){ //User pressed up key
+    if (38 in keyEvent){ //User pressed up key
         player.y -= player.speed;
         player.pacdirection=96;
     }
-    if(39 in keyEvent){ //User pressed right key
+    if (39 in keyEvent){ //User pressed right key
         player.x += player.speed;
         player.pacdirection=0;
     }
-    if(40 in keyEvent){ //User pressed down key
+    if (40 in keyEvent){ //User pressed down key
         player.y += player.speed;
         player.pacdirection=32;
     }
+    
+    /* Ensuring that player do not go over the screen */
+    if (player.x >= (canvas.width-32)){
+        player.x = 0;
+    }
+    if (player.y >= (canvas.width-32)){
+        player.y = 0;
+    }
+    if (player.x < 0){
+        player.x = canvas.width-32;
+    }
+    if (player.y < 0){
+        player.y = canvas.height-32;
+    }
+    /* Controlling the pac man mouth */
+    if (player.pacmouth == 320){
+        player.pacmouth = 352;
+    }
+    else{
+        player.pacmouth = 320;
+    }
+    //rendering the game canvas
     render();
 }
 
