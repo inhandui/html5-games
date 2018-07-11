@@ -10,7 +10,11 @@ var player = { //Player object
     pacmouth:320,
     pacdirection:0,
     speed:5
-//    psize:32
+}
+var enemy = { //Enemy object 
+    x:150,
+    y:200,
+    speed:5
 } 
 var keyEvent = {}; //Used to capture key events
 
@@ -46,16 +50,16 @@ function move(keyEvent){
     }
     
     /* Ensuring that player do not go over the screen */
-    if (player.x >= (canvas.width-32)){
+    if (player.x >= (canvas.width-32)){ //transporting player from the right side of screen to left side.
         player.x = 0;
     }
-    if (player.y >= (canvas.height-32)){
+    if (player.y >= (canvas.height-32)){ //transporting player from the botton side of screen to up side.
         player.y = 0;
     }
-    if (player.x < 0){
+    if (player.x < 0){ //transporting player from the left side of screen to right side.
         player.x = canvas.width-32;
     }
-    if (player.y < 0){
+    if (player.y < 0){ //transporting player from the up side of screen to botton side.
         player.y = canvas.height-32;
     }
     /* Controlling the pac man mouth */
@@ -98,10 +102,15 @@ function checkReady(){
 
 /* Function to play the game */
 function playGame(){
-    render();
+    render(); //render the game canvas and elements.
+    requestAnimationFrame(playGame); //Window object function to make a animation loop.
 }
 
-/* Function to render elements in canvas */
+/* 
+    Function to render elements in canvas.
+    This function rendering in order. It is work like layers. 
+    First element - botton layer. Last element - top layer.
+*/
 function render(){
     context.fillStyle = "black";
     context.fillRect(0,0, canvas.width, canvas.height);
@@ -117,6 +126,9 @@ function render(){
         width	- Optional. The width of the image to use (stretch or reduce the image)	
         height	- Optional. The height of the image to use (stretch or reduce the image)
     */
+    //Drawing red enemy
+    context.drawImage(spriteSheet, 0, 0, 32, 32, enemy.x, enemy.y, 32,32);
+    //Drawing pacman
     context.drawImage(spriteSheet, player.pacmouth, player.pacdirection, 32, 32, player.x, player.y, 32,32);
     context.font = "20px Verdana";
     context.fillStyle = "white";
