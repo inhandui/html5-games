@@ -125,8 +125,8 @@ function render(){
     
     if (!ghost){
         enemy.ghostNum = myNumber(5)*64;
-        enemy.x = myNumber(canvas.width-100);
-        enemy.y = myNumber(canvas.height-100);
+        enemy.x = myNumber(canvas.width-100)+50;
+        enemy.y = myNumber(canvas.height-100)+50;
         ghost = true;
     }
     /* 
