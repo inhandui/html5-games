@@ -4,6 +4,7 @@ var context; //Used to create context elements
 var spriteSheet; //Used to store the game sprite sheet 
 var score; //Used to store the pacman scores
 var gscore; //Used to store the ghosts scores
+var ghost; //Used to control ghost spawn.
 var player = { //Player object 
     x:50,
     y:100,
@@ -107,6 +108,13 @@ function playGame(){
 }
 
 /* 
+    Function to random based on a number 
+    Return a interger number from zero to (n-1).
+*/
+function myNumber(n){
+    return Math.floor(Math.random()*n);
+}
+/* 
     Function to render elements in canvas.
     This function rendering in order. It is work like layers. 
     First element - botton layer. Last element - top layer.
@@ -114,6 +122,13 @@ function playGame(){
 function render(){
     context.fillStyle = "black";
     context.fillRect(0,0, canvas.width, canvas.height);
+    
+    if (!ghost){
+        enemy.ghostNum = myNumber(5)*64;
+        enemy.x = myNumber(canvas.width-100);
+        enemy.y = myNumber(canvas.height-100);
+        ghost = true;
+    }
     /* 
         Function drawImage() parameters:
         img	    - Specifies the image, canvas, or video element to use	 
@@ -127,7 +142,7 @@ function render(){
         height	- Optional. The height of the image to use (stretch or reduce the image)
     */
     //Drawing red enemy
-    context.drawImage(spriteSheet, 0, 0, 32, 32, enemy.x, enemy.y, 32,32);
+    context.drawImage(spriteSheet, enemy.ghostNum, 0, 32, 32, enemy.x, enemy.y, 32,32);
     //Drawing pacman
     context.drawImage(spriteSheet, player.pacmouth, player.pacdirection, 32, 32, player.x, player.y, 32,32);
     context.font = "20px Verdana";
