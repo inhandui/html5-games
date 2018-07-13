@@ -138,8 +138,8 @@ function render() {
     
     /* Creating ghost movement */
     if (enemy.moving < 0) { //Testing whether enemy spend all moving points
-        enemy.moving = (myNumber(30)*3)+10+myNumber(1); //randomizing movement "distance".
-        enemy.speed = myNumber(4)+1; //Getting random speed always equals to 1 or more.
+        enemy.moving = (myNumber(20)*3)+myNumber(1); //randomizing movement "distance".
+        enemy.speed = myNumber(3)+1; //Getting random speed always equals to 1 or more.
         enemy.direction_x = 0; 
         enemy.direction_y= 0; 
         //Even number change X direction and odd change Y direction. Used to chase player.
@@ -163,6 +163,20 @@ function render() {
     enemy.moving--;
     enemy.x += enemy.direction_x; 
     enemy.y += enemy.direction_y;
+    
+    /* Ensuring that enemy do not go over the canvas */
+    if (enemy.x >= (canvas.width - 32)) { //transporting enemy from the right side of canvas to left side.
+        enemy.x = 0;
+    }
+    if (enemy.y >= (canvas.height - 32)) { //transporting enemy from the botton side of canvas to up side.
+        enemy.y = 0;
+    }
+    if (enemy.x < 0) { //transporting enemy from the left side of canvas to right side.
+        enemy.x = canvas.width - 32;
+    }
+    if (enemy.y < 0) { //transporting enemy from the up side of canvas to botton side.
+        enemy.y = canvas.height - 32;
+    }
     
     /* 
         Function drawImage() parameters:
