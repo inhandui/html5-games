@@ -8,15 +8,15 @@ var ghost; //Used to control ghost spawn.
 var player = { //Player object.
     x: 50, //X position on the canvas.
     y: 100, //Y position on the canvas.
-    pacmouth: 320, 
-    pacdirection: 0, //Head direction.
-    speed: 5 //Current speed.
+    pacmouth: 320, //current mouth state.
+    pacdirection: 0, //Current head direction.
+    speed: 5 //Player speed.
 }
 var enemy = { //Enemy object.
     x: 150, //X position on the canvas.
     y: 200, //Y position on the canvas.
     speed: 5, //Current speed.
-    moving: false, //Current moving state (although, movement code is based on moving using intergers)
+    moving: 0, //Current moving points.
     direction_x: 0, //X movement direction on canvas.
     direction_y: 0 //Y movement direction on canvas.
 }
@@ -54,27 +54,28 @@ function move(keyEvent) {
         player.pacdirection = 32;
     }
 
-    /* Ensuring that player do not go over the screen */
-    if (player.x >= (canvas.width - 32)) { //transporting player from the right side of screen to left side.
+    /* Ensuring that player do not go over the canvas */
+    if (player.x >= (canvas.width - 32)) { //transporting player from the right side of canvas to left side.
         player.x = 0;
     }
-    if (player.y >= (canvas.height - 32)) { //transporting player from the botton side of screen to up side.
+    if (player.y >= (canvas.height - 32)) { //transporting player from the botton side of canvas to up side.
         player.y = 0;
     }
-    if (player.x < 0) { //transporting player from the left side of screen to right side.
+    if (player.x < 0) { //transporting player from the left side of canvas to right side.
         player.x = canvas.width - 32;
     }
-    if (player.y < 0) { //transporting player from the up side of screen to botton side.
+    if (player.y < 0) { //transporting player from the up side of canvas to botton side.
         player.y = canvas.height - 32;
     }
+    
     /* Controlling the pac man mouth */
     if (player.pacmouth == 320) {
         player.pacmouth = 352;
     } else {
         player.pacmouth = 320;
     }
-    //rendering the game canvas
-    render();
+    
+    render(); //rendering the game canvas.
 }
 
 /* Function to setup the Game Manager */
