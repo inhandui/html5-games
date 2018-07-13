@@ -11,7 +11,7 @@ var player = { //Player object.
     pacmouth: 320, //current mouth state.
     pacdirection: 0, //Current head direction.
     speed: 5 //Player speed.
-}
+};
 var enemy = { //Enemy object.
     x: 150, //X position on the canvas.
     y: 200, //Y position on the canvas.
@@ -19,7 +19,13 @@ var enemy = { //Enemy object.
     moving: 0, //Current moving points.
     direction_x: 0, //X movement direction on canvas.
     direction_y: 0 //Y movement direction on canvas.
-}
+};
+var powerdot = { //Powerdot object.
+    x: 200, //X position on the canvas.
+    y: 300, //Y position on the canvas.
+    powerup: false //current state of the powerdot. Controll whether powerdot will be set and draw or not.
+};
+
 /* Keyboard events object */
 var keyEvent = {}; //Used to capture key events and store to an array.
 
@@ -127,6 +133,12 @@ function render() {
     context.fillStyle = "black";
     context.fillRect(0, 0, canvas.width, canvas.height);
 
+    /*Setting up a powerdot */
+    if (!powerdot.powerup){ //Checking whether powerdot is set or not.
+        powerdot.x = myNumber(canvas.width-100); 
+        powerdot.y = myNumber(canvas.height-100);
+        powerdot.powerup = true;
+    }
 
     /* Randomizing ghosts to get different ghosts colors */
     if (!ghost) { //Testing whether ghosts are not created
@@ -140,12 +152,12 @@ function render() {
     if (enemy.moving < 0) { //Testing whether enemy spend all moving points
         enemy.moving = (myNumber(20)*3)+myNumber(1); //randomizing movement "distance".
         enemy.speed = myNumber(3)+1; //Getting random speed always equals to 1 or more.
-        enemy.direction_x = 0; 
-        enemy.direction_y= 0; 
+        enemy.direction_x = 0;
+        enemy.direction_y= 0;
         //Even number change X direction and odd change Y direction. Used to chase player.
         if (enemy.moving % 2) {  
             if (player.x < enemy.x) {
-                enemy.direction_x = - enemy.speed;
+                enemy.direction_x = -enemy.speed;
             } 
             else{
                 enemy.direction_x = enemy.speed;
@@ -176,6 +188,15 @@ function render() {
     }
     if (enemy.y < 0) { //transporting enemy from the up side of canvas to botton side.
         enemy.y = canvas.height - 32;
+    }
+    
+    /* Drawing a powerdot */
+    if (powerdot.powerup){
+        context.fillStyle = "#ffffff";
+        context.beginPath();
+        context.arc(powerdot.x, powerdot.y, 5,0, 2 * Math.PI, true);
+        context.closePath();
+        context.fill();
     }
     
     /* 
