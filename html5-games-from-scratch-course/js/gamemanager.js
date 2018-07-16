@@ -10,7 +10,13 @@ var player = { //Player object.
     y: 100, //Y position on the canvas.
     pacmouth: 320, //current mouth state.
     pacdirection: 0, //Current head direction.
-    speed: 5 //Player speed.
+    speed: 5, //Player speed.
+    centerx: 0, //Sprite center. Used to calculate collision detection. 
+    centery: 0, //Sprite center. Used to calculate collision detection.
+    updateCenter: function(){
+        this.centerx = this.x+16;
+        this.centery = this.y+16;
+    }
 };
 var enemy = { //Enemy object.
     x: 150, //X position on the canvas.
@@ -59,6 +65,8 @@ function move(keyEvent) {
         player.y += player.speed;
         player.pacdirection = 32;
     }
+    
+    player.updateCenter();
 
     /* Ensuring that player do not go over the canvas */
     if (player.x >= (canvas.width - 32)) { //transporting player from the right side of canvas to left side.
@@ -73,6 +81,8 @@ function move(keyEvent) {
     if (player.y < 0) { //transporting player from the up side of canvas to botton side.
         player.y = canvas.height - 32;
     }
+    
+    player.updateCenter();
     
     /* Controlling the pac man mouth */
     if (player.pacmouth == 320) {
@@ -89,6 +99,10 @@ function setup() {
     /* Set game score */
     score = 0;
     gscore = 0;
+    
+    /* setting up player center */
+    player.updateCenter();
+    
 
     /* Creating the canvas */
     canvas = document.createElement("canvas");
@@ -190,11 +204,80 @@ function render() {
         enemy.y = canvas.height - 32;
     }
     
+    /* Collision detection */
+    
+    //checking whether x1 and y1 coordinates of player are inside the powerdot 
+    if ((player.centerx - 10) <= (powerdot.x + 15) && (player.centerx - 10) >= (powerdot.x - 15) &&
+        (player.centery - 10) >= (powerdot.y - 10) && (player.centery - 10) <= (powerdot.y + 15))  {
+        console.log("q1 - hit"); 
+    }
+    //checking whether x2 and y1 coordinates of player are inside the powerdot 
+    if ((player.centerx + 10) <= (powerdot.x + 15) && (player.centerx + 10) >= (powerdot.x - 15) &&
+        (player.centery - 10) >= (powerdot.y - 15) && (player.centery - 10) <= (powerdot.y + 15))  {
+        console.log("q2 - hit"); 
+    }
+    //checking whether x1 and y2 coordinates of player are inside the powerdot 
+    if ((player.centerx - 10) <= (powerdot.x + 15) && (player.centerx - 10) >= (powerdot.x - 15) &&
+        (player.centery + 10) >= (powerdot.y - 15) && (player.centery + 10) <= (powerdot.y + 15))  {
+        console.log("q3 - hit"); 
+    }
+    //checking whether x2 and y2 coordinates of player are inside the powerdot 
+    if ((player.centerx + 10) >= (powerdot.x - 15) && (player.centerx + 10) <= (powerdot.x + 15) &&
+        (player.centery + 10) >= (powerdot.y - 15) && (player.centery + 10) <= (powerdot.y + 15))  {
+        console.log("q4 - hit"); 
+    }
+    
+    /* drawing a collision detection area for powerdot*/
+    context.fillStyle = "red";
+    context.beginPath();
+    context.arc(powerdot.x-15, powerdot.y-15, 2,0, 2 * Math.PI, true); //x1 - y1
+    context.closePath();
+    context.fill();
+    context.beginPath();
+    context.arc(powerdot.x+15, powerdot.y-15, 2,0, 2 * Math.PI, true); //x2 - y1
+    context.closePath();
+    context.fill();
+    context.beginPath();
+    context.arc(powerdot.x-15, powerdot.y+15, 2,0, 2 * Math.PI, true); //x1 - y2
+    context.closePath();
+    context.fill();
+    context.beginPath();
+    context.arc(powerdot.x+15, powerdot.y+15, 2,0, 2 * Math.PI, true); //x2 - y2
+    context.closePath();
+    context.fill();
+    
+    /* drawing a collision detection area for pacman*/
+    context.fillStyle = "red";
+    context.beginPath();
+    context.arc(player.centerx-10, player.centery-10, 2,0, 2 * Math.PI, true); //x1 - y1
+    context.closePath();
+    context.fill();
+    context.beginPath();
+    context.arc(player.centerx+10, player.centery-10, 2,0, 2 * Math.PI, true); //x2 - y1
+    context.closePath();
+    context.fill();
+    context.beginPath();
+    context.arc(player.centerx-10, player.centery+10, 2,0, 2 * Math.PI, true); //x1 - y2
+    context.closePath();
+    context.fill();
+    context.beginPath();
+    context.arc(player.centerx+10, player.centery+10, 2,0, 2 * Math.PI, true); //x2 - y2
+    context.closePath();
+    context.fill();
+    
+    /* drawing pacman center */
+    context.fillStyle = "white";
+    context.beginPath();
+    context.arc(player.centerx, player.centery, 2,0, 2 * Math.PI, true); //center
+    context.closePath();
+    context.fill();
+
+
     /* Drawing a powerdot */
     if (powerdot.powerup){
         context.fillStyle = "#ffffff";
         context.beginPath();
-        context.arc(powerdot.x, powerdot.y, 5,0, 2 * Math.PI, true);
+        context.arc(powerdot.x, powerdot.y, 20,0, 2 * Math.PI, true);
         context.closePath();
         context.fill();
     }
