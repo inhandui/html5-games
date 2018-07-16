@@ -25,11 +25,14 @@ var enemy = { //Enemy object.
     moving: 0, //Current moving points.
     direction_x: 0, //X movement direction on canvas.
     direction_y: 0 //Y movement direction on canvas.
+    //ghostNum - Ghost collors based on numbers.
 };
 var powerdot = { //Powerdot object.
     x: 200, //X position on the canvas.
     y: 300, //Y position on the canvas.
-    powerup: false //current state of the powerdot. Controll whether powerdot will be set and draw or not.
+    powerup: false, //current state of the powerdot. Controll whether powerdot will be set and draw or not.
+    countdown: 0, //Time to expire the powerup.
+    ghostNum: 0 //Ghost collor.
 };
 
 /* Keyboard events object */
@@ -138,6 +141,7 @@ function playGame() {
 function myNumber(n) {
     return Math.floor(Math.random() * n);
 }
+
 /* 
     Function to render elements in canvas.
     This function rendering in order. It is work like layers. 
@@ -156,7 +160,7 @@ function render() {
 
     /* Randomizing ghosts to get different ghosts colors */
     if (!ghost) { //Testing whether ghosts are not created
-        enemy.ghostNum = myNumber(5) * 64;
+        enemy.ghostNum = myNumber(5) * 64; //Setting ghost collor based on numbers
         enemy.x = myNumber(canvas.width - 100) + 50;
         enemy.y = myNumber(canvas.height - 100) + 50;
         ghost = true;
@@ -205,11 +209,19 @@ function render() {
     }
     
     /* Collision detection */
-    
     //checking whether x1 and y1 coordinates of player are inside the powerdot 
     if ((player.centerx - 10) <= (powerdot.x + 15) && (player.centerx - 10) >= (powerdot.x - 15) &&
         (player.centery - 10) >= (powerdot.y - 10) && (player.centery - 10) <= (powerdot.y + 15))  {
-        console.log("q1 - hit"); 
+        /* changing powerdot properties and set powerup active */
+        if(powerdot.powerup){
+            powerdot.powerup = false; 
+            powerdot.countdown = 500; //setting up the time to expire the powerdot.
+            powerdot.ghostNum = enemy.ghostNum; //store the old ghost number for be able to return to ghost.
+            enemy.ghostNum = 384; //setting to the "blinking" ghost.
+            /* Move powerdot to avoid collision. But it's better disable collisions for it. */
+            powerdot.x = 0; 
+            powerdot.y = 0; 
+        }
     }
     //checking whether x2 and y1 coordinates of player are inside the powerdot 
     if ((player.centerx + 10) <= (powerdot.x + 15) && (player.centerx + 10) >= (powerdot.x - 15) &&
