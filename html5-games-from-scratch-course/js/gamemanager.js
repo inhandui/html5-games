@@ -239,6 +239,54 @@ function collision(ObjectX, ObjectY){
     return false;
 }
 
+/* Function to draw collision detection reference points */
+function collisionDetectionPoints() {
+    /* drawing a collision detection area for powerdot*/
+    context.fillStyle = "red";
+    context.beginPath();
+    context.arc(powerdot.x - 15, powerdot.y - 15, 2, 0, 2 * Math.PI, true); //x1 - y1
+    context.closePath();
+    context.fill();
+    context.beginPath();
+    context.arc(powerdot.x + 15, powerdot.y - 15, 2, 0, 2 * Math.PI, true); //x2 - y1
+    context.closePath();
+    context.fill();
+    context.beginPath();
+    context.arc(powerdot.x - 15, powerdot.y + 15, 2, 0, 2 * Math.PI, true); //x1 - y2
+    context.closePath();
+    context.fill();
+    context.beginPath();
+    context.arc(powerdot.x + 15, powerdot.y + 15, 2, 0, 2 * Math.PI, true); //x2 - y2
+    context.closePath();
+    context.fill();
+
+    /* drawing a collision detection area for pacman*/
+    context.fillStyle = "red"; //12 is the best size
+    context.beginPath();
+    context.arc(player.centerx - player.collisionsize, player.centery - 12, 2, 0, 2 * Math.PI, true); //x1 - y1
+    context.closePath();
+    context.fill();
+    context.beginPath();
+    context.arc(player.centerx + player.collisionsize, player.centery - 12, 2, 0, 2 * Math.PI, true); //x2 - y1
+    context.closePath();
+    context.fill();
+    context.beginPath();
+    context.arc(player.centerx - player.collisionsize, player.centery + 12, 2, 0, 2 * Math.PI, true); //x1 - y2
+    context.closePath();
+    context.fill();
+    context.beginPath();
+    context.arc(player.centerx + player.collisionsize, player.centery + 12, 2, 0, 2 * Math.PI, true); //x2 - y2
+    context.closePath();
+    context.fill();
+
+    /* drawing pacman center */
+    context.fillStyle = "white";
+    context.beginPath();
+    context.arc(player.centerx, player.centery, 2, 0, 2 * Math.PI, true); //center
+    context.closePath();
+    context.fill();
+}
+
 /* 
     Function to render elements in canvas.
     This function rendering in order. It is work like layers. 
@@ -316,51 +364,8 @@ function render() {
         }
     }
     
-    /* drawing a collision detection area for powerdot*/
-    context.fillStyle = "red";
-    context.beginPath();
-    context.arc(powerdot.x - 15, powerdot.y - 15, 2, 0, 2 * Math.PI, true); //x1 - y1
-    context.closePath();
-    context.fill();
-    context.beginPath();
-    context.arc(powerdot.x + 15, powerdot.y - 15, 2, 0, 2 * Math.PI, true); //x2 - y1
-    context.closePath();
-    context.fill();
-    context.beginPath();
-    context.arc(powerdot.x - 15, powerdot.y + 15, 2, 0, 2 * Math.PI, true); //x1 - y2
-    context.closePath();
-    context.fill();
-    context.beginPath();
-    context.arc(powerdot.x + 15, powerdot.y + 15, 2, 0, 2 * Math.PI, true); //x2 - y2
-    context.closePath();
-    context.fill();
-
-    /* drawing a collision detection area for pacman*/
-    context.fillStyle = "red"; //12 is the best size
-    context.beginPath();
-    context.arc(player.centerx - player.collisionsize, player.centery - 12, 2, 0, 2 * Math.PI, true); //x1 - y1
-    context.closePath();
-    context.fill();
-    context.beginPath();
-    context.arc(player.centerx + player.collisionsize, player.centery - 12, 2, 0, 2 * Math.PI, true); //x2 - y1
-    context.closePath();
-    context.fill();
-    context.beginPath();
-    context.arc(player.centerx - player.collisionsize, player.centery + 12, 2, 0, 2 * Math.PI, true); //x1 - y2
-    context.closePath();
-    context.fill();
-    context.beginPath();
-    context.arc(player.centerx + player.collisionsize, player.centery + 12, 2, 0, 2 * Math.PI, true); //x2 - y2
-    context.closePath();
-    context.fill();
-
-    /* drawing pacman center */
-    context.fillStyle = "white";
-    context.beginPath();
-    context.arc(player.centerx, player.centery, 2, 0, 2 * Math.PI, true); //center
-    context.closePath();
-    context.fill();
-
+    /* Drawing collision detection points on canvas */
+    collisionDetectionPoints();
 
     /* Drawing elements */
     powerdot.draw();
