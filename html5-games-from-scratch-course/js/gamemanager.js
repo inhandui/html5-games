@@ -118,14 +118,18 @@ var enemy = { //Enemy object.
                 if (this.moving % 2) {
                     if (player.x < this.x) {
                         this.direction_x = -this.speed;
+                        this.flash = 64;
                     } else {
                         this.direction_x = this.speed;
+                        this.flash = 0;
                     }
                 } else {
                     if (player.y < this.y) {
                         this.direction_y = -this.speed;
+                        this.flash = 96;
                     } else {
                         this.direction_y = this.speed;
+                        this.flash = 32;
                     }
                 }
             }
