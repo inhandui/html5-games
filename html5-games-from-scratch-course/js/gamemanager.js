@@ -56,7 +56,55 @@ var enemy = { //Enemy object.
     ghostNum: 0,//Ghost collors based on numbers.
     oldGhostNum: 0, //old ghostNum value.
     flash: 0, //Allow enemy flash when powerdot is hit by the player.
-    eat: false, //verify is enemy is able to eat player
+    eat: false, //verify whether player can eat enemy or not. True - player can eat. False - Player can't eat.
+    move: function(){ //calculates ghost movement
+        if (this.moving < 0) { //Testing whether enemy spend all moving points
+            this.moving = (myNumber(20) * 3) + myNumber(1); //randomizing movement "distance".
+            this.speed = myNumber(3) + 1; //Getting random speed always equals to 1 or more.
+            if (this.eat) {//Enemy can be eaten
+                this.speed = this.speed * (-1);//change velocity to enemy run away from player
+            }
+            /* clear last direction */
+            this.direction_x = 0; 
+            this.direction_y = 0;
+            //Even number change X direction and odd change Y direction. Used to chase player.
+            if (this.moving % 2) {
+                if (player.x < this.x) {
+                    this.direction_x = -this.speed;
+                    this.flash = 64;
+                } else {
+                    this.direction_x = this.speed;
+                    this.flash = 0;
+                }
+            } else {
+                if (player.y < this.y) {
+                    this.direction_y = -this.speed;
+                    this.flash = 96;
+                } else {
+                    this.direction_y = this.speed;
+                    this.flash = 32;
+                }
+            }
+        }
+        /* change enemy position and reduce one step */
+        this.moving--;
+        this.x += this.direction_x;
+        this.y += this.direction_y;
+        /* Ensuring that enemy do not go over the canvas */
+        if (this.x >= (canvas.width - 32)) { //transporting enemy from the right side of canvas to left side.
+            this.x = 0;
+        }
+        if (this.y >= (canvas.height - 32)) { //transporting enemy from the botton side of canvas to up side.
+            this.y = 0;
+        }
+        if (this.x < 0) { //transporting enemy from the left side of canvas to right side.
+            this.x = canvas.width - 32;
+        }
+        if (this.y < 0) { //transporting enemy from the up side of canvas to botton side.
+            this.y = canvas.height - 32;
+        }
+        
+    },
     draw: function(){//function to draw a enemy sprite on canvas.
         //Drawing red enemy - to see how to drawImage() works look at in player.draw()
         context.drawImage(spriteSheet, this.ghostNum, enemy.flash, this.width, this.height, this.x, this.y, this.width, this.height);
@@ -69,30 +117,10 @@ var enemy = { //Enemy object.
             this.y = myNumber(canvas.height - 100) + 50; //Avoiding spawn enemy on the canvas corners.
             ghost = true; //Changing ghost to true to avoid create more ghosts.
         }
-
         /* Creating ghost movement */
         if (player.countdown>0) { //player got powerup, so ghost will run away from the player
             /* Run away from the player */
-            if (this.moving < 0) { //Testing whether enemy spend all moving points
-                this.moving = (myNumber(20) * 3) + myNumber(1); //randomizing movement "distance".
-                this.speed = myNumber(3) + 1; //Getting random speed always equals to 1 or more.
-                this.direction_x = 0;
-                this.direction_y = 0;
-                //Even number change X direction and odd change Y direction. Used to chase player.
-                if (this.moving % 2) {
-                    if (player.x < this.x) {
-                        this.direction_x = this.speed;
-                    } else {
-                        this.direction_x = -this.speed;
-                    }
-                } else {
-                    if (player.y < this.y) {
-                        this.direction_y = this.speed;
-                    } else {
-                        this.direction_y = -this.speed;
-                    }
-                }
-            }
+            this.move();
             /* Blink */
             if (player.countdown % 10 == 0) {
                 if (enemy.flash == 0) {
@@ -109,48 +137,7 @@ var enemy = { //Enemy object.
                 this.ghostNum = enemy.oldGhostNum;
             }
             /* Run toward the player */
-            if (this.moving < 0) { //Testing whether enemy spend all moving points
-                this.moving = (myNumber(20) * 3) + myNumber(1); //randomizing movement "distance".
-                this.speed = myNumber(3) + 1; //Getting random speed always equals to 1 or more.
-                this.direction_x = 0;
-                this.direction_y = 0;
-                //Even number change X direction and odd change Y direction. Used to chase player.
-                if (this.moving % 2) {
-                    if (player.x < this.x) {
-                        this.direction_x = -this.speed;
-                        this.flash = 64;
-                    } else {
-                        this.direction_x = this.speed;
-                        this.flash = 0;
-                    }
-                } else {
-                    if (player.y < this.y) {
-                        this.direction_y = -this.speed;
-                        this.flash = 96;
-                    } else {
-                        this.direction_y = this.speed;
-                        this.flash = 32;
-                    }
-                }
-            }
-        }
-        
-        enemy.moving--;
-        enemy.x += enemy.direction_x;
-        enemy.y += enemy.direction_y;
-
-        /* Ensuring that enemy do not go over the canvas */
-        if (enemy.x >= (canvas.width - 32)) { //transporting enemy from the right side of canvas to left side.
-            enemy.x = 0;
-        }
-        if (enemy.y >= (canvas.height - 32)) { //transporting enemy from the botton side of canvas to up side.
-            enemy.y = 0;
-        }
-        if (enemy.x < 0) { //transporting enemy from the left side of canvas to right side.
-            enemy.x = canvas.width - 32;
-        }
-        if (enemy.y < 0) { //transporting enemy from the up side of canvas to botton side.
-            enemy.y = canvas.height - 32;
+            this.move();
         }
     }
 };
