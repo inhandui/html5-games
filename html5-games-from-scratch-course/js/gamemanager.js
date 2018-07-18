@@ -16,6 +16,7 @@ var player = { //Player object.
     centerx: 0, //Sprite center. Used to calculate collision detection. 
     centery: 0, //Sprite center. Used to calculate collision detection.
     collisionsize: 12, //Size used to calculate collision area corners. Older value is 10.
+    countdown: 0, //Time to expire the powerup.
     updateCenter: function () { //function to update center of player sprite.
         this.centerx = this.x + 16;
         this.centery = this.y + 16;
@@ -37,7 +38,9 @@ var player = { //Player object.
         context.drawImage(spriteSheet, this.pacmouth, this.pacdirection, this.width, this.height, this.x, this.y, this.width, this.height);
     },
     update: function(){ //function to update player properties.
-        
+        if (this.countdown>0) {
+            this.countdown--;
+        }
     }
 };
 var enemy = { //Enemy object.
@@ -47,15 +50,104 @@ var enemy = { //Enemy object.
     height: 32, //Sprite height after draw.
     speed: 5, //Current speed.
     moving: 0, //Current moving points.
+    pacdirection: 0, //Current eyes direction.
     direction_x: 0, //X movement direction on canvas.
     direction_y: 0, //Y movement direction on canvas.
-    //ghostNum - Ghost collors based on numbers.
+    ghostNum: 0,//Ghost collors based on numbers.
+    oldGhostNum: 0, //old ghostNum value.
+    flash: 0, //Allow enemy flash when powerdot is hit by the player.
+    eat: false, //verify is enemy is able to eat player
     draw: function(){//function to draw a enemy sprite on canvas.
         //Drawing red enemy - to see how to drawImage() works look at in player.draw()
-        context.drawImage(spriteSheet, this.ghostNum, 0, this.width, this.height, this.x, this.y, this.width, this.height);
+        context.drawImage(spriteSheet, this.ghostNum, enemy.flash, this.width, this.height, this.x, this.y, this.width, this.height);
     },
     update: function(){ //function to update enemy properties.
+        /* Randomizing ghosts to get different ghosts colors */
+        if (!ghost) { //Testing whether ghosts are not created
+            this.ghostNum = myNumber(5) * 64; //Setting ghost collor based on numbers.
+            this.x = myNumber(canvas.width - 100) + 50; //Avoiding spawn enemy on the canvas corners.
+            this.y = myNumber(canvas.height - 100) + 50; //Avoiding spawn enemy on the canvas corners.
+            ghost = true; //Changing ghost to true to avoid create more ghosts.
+        }
+
+        /* Creating ghost movement */
+        if (player.countdown>0) { //player got powerup, so ghost will run away from the player
+            /* Run away from the player */
+            if (this.moving < 0) { //Testing whether enemy spend all moving points
+                this.moving = (myNumber(20) * 3) + myNumber(1); //randomizing movement "distance".
+                this.speed = myNumber(3) + 1; //Getting random speed always equals to 1 or more.
+                this.direction_x = 0;
+                this.direction_y = 0;
+                //Even number change X direction and odd change Y direction. Used to chase player.
+                if (this.moving % 2) {
+                    if (player.x < this.x) {
+                        this.direction_x = this.speed;
+                    } else {
+                        this.direction_x = -this.speed;
+                    }
+                } else {
+                    if (player.y < this.y) {
+                        this.direction_y = this.speed;
+                    } else {
+                        this.direction_y = -this.speed;
+                    }
+                }
+            }
+            /* Blink */
+            if (player.countdown % 10 == 0) {
+                if (enemy.flash == 0) {
+                    enemy.flash = 32;
+                }
+                else {
+                    enemy.flash = 0;
+                }   
+            }
+        }
+        else {//ghost will go toward the player
+            if (this.eat) { //ensure the correct valeu for this.eat and get back the old collor.
+                this.eat = false;
+                this.ghostNum = enemy.oldGhostNum;
+            }
+            /* Run toward the player */
+            if (this.moving < 0) { //Testing whether enemy spend all moving points
+                this.moving = (myNumber(20) * 3) + myNumber(1); //randomizing movement "distance".
+                this.speed = myNumber(3) + 1; //Getting random speed always equals to 1 or more.
+                this.direction_x = 0;
+                this.direction_y = 0;
+                //Even number change X direction and odd change Y direction. Used to chase player.
+                if (this.moving % 2) {
+                    if (player.x < this.x) {
+                        this.direction_x = -this.speed;
+                    } else {
+                        this.direction_x = this.speed;
+                    }
+                } else {
+                    if (player.y < this.y) {
+                        this.direction_y = -this.speed;
+                    } else {
+                        this.direction_y = this.speed;
+                    }
+                }
+            }
+        }
         
+        enemy.moving--;
+        enemy.x += enemy.direction_x;
+        enemy.y += enemy.direction_y;
+
+        /* Ensuring that enemy do not go over the canvas */
+        if (enemy.x >= (canvas.width - 32)) { //transporting enemy from the right side of canvas to left side.
+            enemy.x = 0;
+        }
+        if (enemy.y >= (canvas.height - 32)) { //transporting enemy from the botton side of canvas to up side.
+            enemy.y = 0;
+        }
+        if (enemy.x < 0) { //transporting enemy from the left side of canvas to right side.
+            enemy.x = canvas.width - 32;
+        }
+        if (enemy.y < 0) { //transporting enemy from the up side of canvas to botton side.
+            enemy.y = canvas.height - 32;
+        }
     }
 };
 var powerdot = { //Powerdot object.
@@ -63,11 +155,10 @@ var powerdot = { //Powerdot object.
     y: 300, //Y position on the canvas.
     radius: 20, //powerdot radius.
     powerup: false, //current state of the powerdot. Controll whether powerdot will be set and draw or not.
-    countdown: 0, //Time to expire the powerup.
     ghostNum: 0, //Ghost collor.
     collisionsize: 15, //Size used to calculate collision area corners. 
     draw: function () { //function to draw a powerdot on canvas.
-        if (powerdot.powerup) {
+        if (this.powerup) {
             context.fillStyle = "#ffffff";
             context.beginPath();
             context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, true);
@@ -76,7 +167,17 @@ var powerdot = { //Powerdot object.
         }
     },
     update: function(){ //function to update powerdot properties.
-        
+        /*Setting up a powerdot */
+        if (!this.powerup) { //Checking whether powerdot is set or not.
+            if (player.countdown==0) { //Creating a powerup pill
+                this.x = myNumber(canvas.width - 100) + 50; 
+                this.y = myNumber(canvas.height - 100) + 50;
+                this.powerup = true;
+            }
+            else if (player.countdown<0 ) { //ensure consistent countdown value.
+                     player.countdown == 0;
+            }
+        }
     }
 };
 
@@ -287,6 +388,29 @@ function collisionDetectionPoints() {
     context.fill();
 }
 
+
+/* Function to controll activities related to powerup=true momments. 
+   When pacman hit the powerdot this function controlls every instructions related to this action. 
+*/
+function powerPillTime(){
+    /* changing powerdot properties and set powerup active */
+    if(powerdot.powerup){
+        /* Disable powerup */
+        powerdot.powerup = false; 
+        /* Move powerdot to avoid collision. But it's better disable collisions for it. */
+        powerdot.x = 0; 
+        powerdot.y = 0; 
+        /* Change player countdown */
+        player.countdown = 500; //setting up the time to expire the powerdot.
+        /* Store all ghosts collors */
+        enemy.oldGhostNum = enemy.ghostNum; //store the old ghost number for be able to return to correct ghost collor.
+        /* Change all ghosts collors */
+        enemy.ghostNum = 384; //setting to the "blinking" ghost.
+        /* Change enemy eat state */
+        enemy.eat = true;
+    }
+}
+
 /* 
     Function to render elements in canvas.
     This function rendering in order. It is work like layers. 
@@ -296,72 +420,15 @@ function render() {
     context.fillStyle = "black";
     context.fillRect(0, 0, canvas.width, canvas.height);
 
-    /*Setting up a powerdot */
-    if (!powerdot.powerup) { //Checking whether powerdot is set or not.
-        powerdot.x = myNumber(canvas.width - 100) + 50; 
-        powerdot.y = myNumber(canvas.height - 100) + 50;
-        powerdot.powerup = true;
-    }
-
-    /* Randomizing ghosts to get different ghosts colors */
-    if (!ghost) { //Testing whether ghosts are not created
-        enemy.ghostNum = myNumber(5) * 64; //Setting ghost collor based on numbers.
-        enemy.x = myNumber(canvas.width - 100) + 50; //Avoiding spawn enemy on the canvas corners.
-        enemy.y = myNumber(canvas.height - 100) + 50; //Avoiding spawn enemy on the canvas corners.
-        ghost = true; //Changing ghost to true to avoid create more ghosts.
-    }
-
-    /* Creating ghost movement */
-    if (enemy.moving < 0) { //Testing whether enemy spend all moving points
-        enemy.moving = (myNumber(20) * 3) + myNumber(1); //randomizing movement "distance".
-        enemy.speed = myNumber(3) + 1; //Getting random speed always equals to 1 or more.
-        enemy.direction_x = 0;
-        enemy.direction_y = 0;
-        //Even number change X direction and odd change Y direction. Used to chase player.
-        if (enemy.moving % 2) {
-            if (player.x < enemy.x) {
-                enemy.direction_x = -enemy.speed;
-            } else {
-                enemy.direction_x = enemy.speed;
-            }
-        } else {
-            if (player.y < enemy.y) {
-                enemy.direction_y = -enemy.speed;
-            } else {
-                enemy.direction_y = enemy.speed;
-            }
-        }
-    }
-    enemy.moving--;
-    enemy.x += enemy.direction_x;
-    enemy.y += enemy.direction_y;
-
-    /* Ensuring that enemy do not go over the canvas */
-    if (enemy.x >= (canvas.width - 32)) { //transporting enemy from the right side of canvas to left side.
-        enemy.x = 0;
-    }
-    if (enemy.y >= (canvas.height - 32)) { //transporting enemy from the botton side of canvas to up side.
-        enemy.y = 0;
-    }
-    if (enemy.x < 0) { //transporting enemy from the left side of canvas to right side.
-        enemy.x = canvas.width - 32;
-    }
-    if (enemy.y < 0) { //transporting enemy from the up side of canvas to botton side.
-        enemy.y = canvas.height - 32;
-    }
+    /* Update elements */
+    powerdot.update();
+    enemy.update();
+    player.update();
 
     /* Collision detection */
     if(collision(player, powerdot)){
-        /* changing powerdot properties and set powerup active */
-        if(powerdot.powerup){
-            powerdot.powerup = false; 
-            powerdot.countdown = 500; //setting up the time to expire the powerdot.
-            powerdot.ghostNum = enemy.ghostNum; //store the old ghost number for be able to return to ghost.
-            enemy.ghostNum = 384; //setting to the "blinking" ghost.
-            /* Move powerdot to avoid collision. But it's better disable collisions for it. */
-            powerdot.x = 0; 
-            powerdot.y = 0; 
-        }
+        //make actions related to collision between player and powerdot.
+        powerPillTime();
     }
     
     /* Drawing collision detection points on canvas */
@@ -372,6 +439,7 @@ function render() {
     enemy.draw();
     player.draw();
 
+    /* Drawing basic Heads Up Display */
     context.font = "20px Verdana";
     context.fillStyle = "white";
     context.fillText("Pacman: " + score + " vs Ghosts " + gscore, 2, 18);
