@@ -49,6 +49,9 @@ var enemy = { //Enemy object.
     width: 32, //sprite width after draw.
     height: 32, //Sprite height after draw.
     speed: 5, //Current speed.
+    centerx: 0, //Sprite center. Used to calculate collision detection. 
+    centery: 0, //Sprite center. Used to calculate collision detection.
+    collisionsize: 12, //Size used to calculate collision area corners.
     moving: 0, //Current moving points.
     pacdirection: 0, //Current eyes direction.
     direction_x: 0, //X movement direction on canvas.
@@ -57,6 +60,10 @@ var enemy = { //Enemy object.
     oldGhostNum: 0, //old ghostNum value.
     flash: 0, //Allow enemy flash when powerdot is hit by the player.
     eat: false, //verify whether player can eat enemy or not. True - player can eat. False - Player can't eat.
+    updateCenter: function () { //function to update center of player sprite.
+        this.centerx = this.x + 16;
+        this.centery = this.y + 16;
+    },
     move: function(){ //calculates ghost movement
         if (this.moving < 0) { //Testing whether enemy spend all moving points
             this.moving = (myNumber(20) * 3) + myNumber(1); //randomizing movement "distance".
@@ -64,10 +71,10 @@ var enemy = { //Enemy object.
             if (this.eat) {//Enemy can be eaten
                 this.speed = this.speed * (-1);//change velocity to enemy run away from player
             }
-            /* clear last direction */
+            /* clear last directions */
             this.direction_x = 0; 
             this.direction_y = 0;
-            //Even number change X direction and odd change Y direction. Used to chase player.
+            //Even number change X direction and odd change Y direction. 
             if (this.moving % 2) {
                 if (player.x < this.x) {
                     this.direction_x = -this.speed;
@@ -103,7 +110,7 @@ var enemy = { //Enemy object.
         if (this.y < 0) { //transporting enemy from the up side of canvas to botton side.
             this.y = canvas.height - 32;
         }
-        
+        this.updateCenter();
     },
     draw: function(){//function to draw a enemy sprite on canvas.
         //Drawing red enemy - to see how to drawImage() works look at in player.draw()
@@ -132,7 +139,7 @@ var enemy = { //Enemy object.
             }
         }
         else {//ghost will go toward the player
-            if (this.eat) { //ensure the correct valeu for this.eat and get back the old collor.
+            if (this.eat) { //ensure the correct value for this.eat and get back the old collor.
                 this.eat = false;
                 this.ghostNum = enemy.oldGhostNum;
             }
@@ -194,8 +201,6 @@ function move(keyEvent) {
         player.pacdirection = 32;
     }
 
-//    player.updateCenter();
-
     /* Ensuring that player do not go over the canvas */
     //transporting player from the right side of canvas to left side.
     if (player.x >= (canvas.width - player.width)) {
@@ -234,20 +239,16 @@ document.addEventListener("keyup", function kUp(event) {
     delete keyEvent[event.keyCode];
 }, false);
 
-/* 
-
-    Function to random based on a number (n).
-    Return a interger number from zero to (n-1).
-*/
+/*  Function to random based on a number (n).
+    Return a interger number from zero to (n-1). */
 function myNumber(n) {
     return Math.floor(Math.random() * n);
 }
 
-/* Function to calculate collision between two squares given 4 vertices of each square.
-   x1, y1, x2, y2; //Square-X points
-   w1, z1, w2, z2; //Square-Y points
-   Return - Return TRUE if has a collision between this two objects otherwise FALSE.
-*/
+/*  Function to calculate collision between two squares given 4 vertices of each square.
+    x1, y1, x2, y2; //Square-X points
+    w1, z1, w2, z2; //Square-Y points
+    Return - Return TRUE if has a collision between this two objects otherwise FALSE. */
 function collisionMath(x1, y1, x2, y2, w1, z1, w2, z2){
     /* Collision detection */
     //checking whether x1 and y1 coordinates of ObjectX (player) are inside the ObjectY.
@@ -268,11 +269,10 @@ function collisionMath(x1, y1, x2, y2, w1, z1, w2, z2){
     }
 }
 
-/* Function to make collision detection between two objects on game.
+/*  Function to make collision detection between two objects on game.
     ObjectX - Object with position (x,y), width and height.
     ObjectY - Object with position (x,y), width and height.
-    Return - Return TRUE if has a collision between this two objects otherwise FALSE.
-*/
+    Return - Return TRUE if has a collision between this two objects otherwise FALSE */
 function collision(ObjectX, ObjectY){
     var x1, y1, x2, y2; //ObjectX vertices
     var w1, z1, w2, z2; //ObjectY vertices
@@ -331,43 +331,47 @@ function collision(ObjectX, ObjectY){
     return false;
 }
 
-/* Function to draw collision detection reference points */
+/* Function to draw collision detection reference points. Use to know where the points actualy are */
 function collisionDetectionPoints() {
+    var dotsize = powerdot.collisionsize;
+    var playersize = player.collisionsize;
+    var enemysize = enemy.collisionsize;
+    
     /* drawing a collision detection area for powerdot*/
     context.fillStyle = "red";
     context.beginPath();
-    context.arc(powerdot.x - 15, powerdot.y - 15, 2, 0, 2 * Math.PI, true); //x1 - y1
+    context.arc(powerdot.x - dotsize, powerdot.y - dotsize, 2, 0, 2 * Math.PI, true); //x1 - y1
     context.closePath();
     context.fill();
     context.beginPath();
-    context.arc(powerdot.x + 15, powerdot.y - 15, 2, 0, 2 * Math.PI, true); //x2 - y1
+    context.arc(powerdot.x + dotsize, powerdot.y - dotsize, 2, 0, 2 * Math.PI, true); //x2 - y1
     context.closePath();
     context.fill();
     context.beginPath();
-    context.arc(powerdot.x - 15, powerdot.y + 15, 2, 0, 2 * Math.PI, true); //x1 - y2
+    context.arc(powerdot.x - dotsize, powerdot.y + dotsize, 2, 0, 2 * Math.PI, true); //x1 - y2
     context.closePath();
     context.fill();
     context.beginPath();
-    context.arc(powerdot.x + 15, powerdot.y + 15, 2, 0, 2 * Math.PI, true); //x2 - y2
+    context.arc(powerdot.x + dotsize, powerdot.y + dotsize, 2, 0, 2 * Math.PI, true); //x2 - y2
     context.closePath();
     context.fill();
 
     /* drawing a collision detection area for pacman*/
     context.fillStyle = "red"; //12 is the best size
     context.beginPath();
-    context.arc(player.centerx - player.collisionsize, player.centery - 12, 2, 0, 2 * Math.PI, true); //x1 - y1
+    context.arc(player.centerx - playersize, player.centery - playersize, 2, 0, 2 * Math.PI, true); //x1 - y1
     context.closePath();
     context.fill();
     context.beginPath();
-    context.arc(player.centerx + player.collisionsize, player.centery - 12, 2, 0, 2 * Math.PI, true); //x2 - y1
+    context.arc(player.centerx + playersize, player.centery - playersize, 2, 0, 2 * Math.PI, true); //x2 - y1
     context.closePath();
     context.fill();
     context.beginPath();
-    context.arc(player.centerx - player.collisionsize, player.centery + 12, 2, 0, 2 * Math.PI, true); //x1 - y2
+    context.arc(player.centerx - playersize, player.centery + playersize, 2, 0, 2 * Math.PI, true); //x1 - y2
     context.closePath();
     context.fill();
     context.beginPath();
-    context.arc(player.centerx + player.collisionsize, player.centery + 12, 2, 0, 2 * Math.PI, true); //x2 - y2
+    context.arc(player.centerx + playersize, player.centery + playersize, 2, 0, 2 * Math.PI, true); //x2 - y2
     context.closePath();
     context.fill();
 
@@ -377,12 +381,37 @@ function collisionDetectionPoints() {
     context.arc(player.centerx, player.centery, 2, 0, 2 * Math.PI, true); //center
     context.closePath();
     context.fill();
+    
+    /* drawing a collision detection area for enemy */
+    context.fillStyle = "red"; //12 is the best size
+    context.beginPath();
+    context.arc(enemy.centerx - enemysize, enemy.centery - enemysize, 2, 0, 2 * Math.PI, true); //x1 - y1
+    context.closePath();
+    context.fill();
+    context.beginPath();
+    context.arc(enemy.centerx + enemysize, enemy.centery - enemysize, 2, 0, 2 * Math.PI, true); //x2 - y1
+    context.closePath();
+    context.fill();
+    context.beginPath();
+    context.arc(enemy.centerx - enemysize, enemy.centery + enemysize, 2, 0, 2 * Math.PI, true); //x1 - y2
+    context.closePath();
+    context.fill();
+    context.beginPath();
+    context.arc(enemy.centerx + enemysize, enemy.centery + enemysize, 2, 0, 2 * Math.PI, true); //x2 - y2
+    context.closePath();
+    context.fill();
+    
+    /* drawing enemy center */
+    context.fillStyle = "white";
+    context.beginPath();
+    context.arc(enemy.centerx, enemy.centery, 2, 0, 2 * Math.PI, true); //center
+    context.closePath();
+    context.fill();
 }
 
 
-/* Function to controll activities related to powerup=true momments. 
-   When pacman hit the powerdot this function controlls every instructions related to this action. 
-*/
+/*  Function to controll activities related to powerup=true momments. 
+    When pacman hit the powerdot this function controlls every instructions related to this action. */
 function powerPillTime(){
     /* changing powerdot properties and set powerup active */
     if(powerdot.powerup){
@@ -402,12 +431,20 @@ function powerPillTime(){
     }
 }
 
-/* 
-    Function to render elements in canvas.
+/* Function to play the game */
+function endGame() {
+    //finish game for some reason.
+    //save states.
+    //show retry or exit screen.
+//    render(); //render the game canvas and elements.
+//    requestAnimationFrame(playGame); //Window object function to make a animation loop.
+}
+
+/*  Function to render elements in canvas.
     This function rendering in order. It is work like layers. 
-    First element - botton layer. Last element - top layer.
-*/
+    First element - botton layer. Last element - top layer. */
 function render() {
+    /* Creating canvas background and size */
     context.fillStyle = "black";
     context.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -417,12 +454,22 @@ function render() {
     player.update();
 
     /* Collision detection */
+    //Collision between player and dot
     if(collision(player, powerdot)){
-        //make actions related to collision between player and powerdot.
-        powerPillTime();
+        powerPillTime(); //make actions related to collision between player and powerdot.
+    }
+    Collision between player and ghost
+    if (collision(player, enemy)) {
+        if (player.countdown>0) {//player eat enemy
+            //destroy enemy instance
+            //add score points
+        }
+        else {//player die
+            endGame();
+        }
     }
     
-    /* Drawing collision detection points on canvas */
+    /* Drawing collision detection points on canvas. Just for debug purpose. */
     collisionDetectionPoints();
 
     /* Drawing elements */
@@ -454,8 +501,9 @@ function setup() {
     score = 0;
     gscore = 0;
 
-    /* setting up player center */
-    player.updateCenter();
+    /* setting up center */
+    player.updateCenter(); //player center
+    enemy.updateCenter(); //enemy center
 
     /* Creating the canvas */
     canvas = document.createElement("canvas");
