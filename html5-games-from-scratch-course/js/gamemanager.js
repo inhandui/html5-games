@@ -458,7 +458,7 @@ function render() {
     if(collision(player, powerdot)){
         powerPillTime(); //make actions related to collision between player and powerdot.
     }
-    Collision between player and ghost
+//    Collision between player and ghost
     if (collision(player, enemy)) {
         if (player.countdown>0) {//player eat enemy
             //destroy enemy instance
