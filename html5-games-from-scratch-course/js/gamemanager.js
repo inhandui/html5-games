@@ -497,7 +497,7 @@ function render() {
     player.update();
 
     /* Collision detection */
-    //Collision between player and dot
+    //Collision between dot and player
     if(collision(powerdot, player)){
         powerPillTime(); //make actions related to collision between player and powerdot.
     }
