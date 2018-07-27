@@ -374,84 +374,6 @@ function collision(ObjectX, ObjectY){
     return false;
 }
 
-/* Function to draw collision detection reference points. Use to know where the points actualy are */
-function collisionDetectionPoints() {
-    var dotsize = powerdot.collisionsize;
-    var playersize = player.collisionsize;
-    var enemysize = enemy.collisionsize;
-    
-    /* drawing a collision detection area for powerdot*/
-    context.fillStyle = "red";
-    context.beginPath();
-    context.arc(powerdot.x - dotsize, powerdot.y - dotsize, 2, 0, 2 * Math.PI, true); //x1 - y1
-    context.closePath();
-    context.fill();
-    context.beginPath();
-    context.arc(powerdot.x + dotsize, powerdot.y - dotsize, 2, 0, 2 * Math.PI, true); //x2 - y1
-    context.closePath();
-    context.fill();
-    context.beginPath();
-    context.arc(powerdot.x - dotsize, powerdot.y + dotsize, 2, 0, 2 * Math.PI, true); //x1 - y2
-    context.closePath();
-    context.fill();
-    context.beginPath();
-    context.arc(powerdot.x + dotsize, powerdot.y + dotsize, 2, 0, 2 * Math.PI, true); //x2 - y2
-    context.closePath();
-    context.fill();
-
-    /* drawing a collision detection area for pacman*/
-    context.fillStyle = "red"; //12 is the best size
-    context.beginPath();
-    context.arc(player.centerx - playersize, player.centery - playersize, 2, 0, 2 * Math.PI, true); //x1 - y1
-    context.closePath();
-    context.fill();
-    context.beginPath();
-    context.arc(player.centerx + playersize, player.centery - playersize, 2, 0, 2 * Math.PI, true); //x2 - y1
-    context.closePath();
-    context.fill();
-    context.beginPath();
-    context.arc(player.centerx - playersize, player.centery + playersize, 2, 0, 2 * Math.PI, true); //x1 - y2
-    context.closePath();
-    context.fill();
-    context.beginPath();
-    context.arc(player.centerx + playersize, player.centery + playersize, 2, 0, 2 * Math.PI, true); //x2 - y2
-    context.closePath();
-    context.fill();
-
-    /* drawing pacman center */
-    context.fillStyle = "white";
-    context.beginPath();
-    context.arc(player.centerx, player.centery, 2, 0, 2 * Math.PI, true); //center
-    context.closePath();
-    context.fill();
-    
-    /* drawing a collision detection area for enemy */
-    context.fillStyle = "red"; //12 is the best size
-    context.beginPath();
-    context.arc(enemy.centerx - enemysize, enemy.centery - enemysize, 2, 0, 2 * Math.PI, true); //x1 - y1
-    context.closePath();
-    context.fill();
-    context.beginPath();
-    context.arc(enemy.centerx + enemysize, enemy.centery - enemysize, 2, 0, 2 * Math.PI, true); //x2 - y1
-    context.closePath();
-    context.fill();
-    context.beginPath();
-    context.arc(enemy.centerx - enemysize, enemy.centery + enemysize, 2, 0, 2 * Math.PI, true); //x1 - y2
-    context.closePath();
-    context.fill();
-    context.beginPath();
-    context.arc(enemy.centerx + enemysize, enemy.centery + enemysize, 2, 0, 2 * Math.PI, true); //x2 - y2
-    context.closePath();
-    context.fill();
-    
-    /* drawing enemy center */
-    context.fillStyle = "white";
-    context.beginPath();
-    context.arc(enemy.centerx, enemy.centery, 2, 0, 2 * Math.PI, true); //center
-    context.closePath();
-    context.fill();
-}
-
 
 /*  Function to controll activities related to powerup=true momments. 
     When pacman hit the powerdot this function controlls every instructions related to this action. */
@@ -519,9 +441,6 @@ function render() {
         }
     }
     
-    /* Drawing collision detection points on canvas. Just for debug purpose. */
-    collisionDetectionPoints();
-
     /* Drawing elements */
     powerdot.draw();
     enemy.draw();
