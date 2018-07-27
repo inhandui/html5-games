@@ -76,10 +76,25 @@ var player = { //Player object.
         this.updateCenter();
 
         /* Controlling the pac man mouth */
-        if (this.pacmouth == 320) {
-            this.pacmouth = 352;
-        } else {
-            this.pacmouth = 320;
+        if (this.pacdirection == 64 || this.pacdirection == 0) { //pac-man is moving on x-axis
+            if (this.x % 5 == 0) { //change mounth at every 5 px
+                if (this.pacmouth == 320) {
+                    this.pacmouth = 352;    
+                }
+                else {
+                    this.pacmouth = 320;
+                }
+            }    
+        }
+        else { //pac-man is moving on y-axis
+            if (this.y % 5 == 0){ //change mounth at every 5 px
+                if (this.pacmouth == 320) {
+                    this.pacmouth = 352;    
+                }
+                else {
+                    this.pacmouth = 320;
+                }
+            }
         }
     }
 };
@@ -222,49 +237,20 @@ var powerdot = { //Powerdot object.
 /* Keyboard events object */
 var keyEvent = {}; //Used to capture key events and store to an array.
 
-/* Player movement function */
+/* Player movement function - change pac-man face direction and let player.move() taking care of the rest */
 function move(keyEvent) {
     if (37 in keyEvent) { //User pressed left key
-//        player.x -= player.speed;
         player.pacdirection = 64;
     }
     if (38 in keyEvent) { //User pressed up key
-//        player.y -= player.speed;
         player.pacdirection = 96;
     }
     if (39 in keyEvent) { //User pressed right key
-//        player.x += player.speed;
         player.pacdirection = 0;
     }
     if (40 in keyEvent) { //User pressed down key
-//        player.y += player.speed;
         player.pacdirection = 32;
     }
-
-//    /* Ensuring that player do not go over the canvas */
-//    //transporting player from the right side of canvas to left side.
-//    if (player.x >= (canvas.width - player.width)) {
-//        player.x = 0;
-//    }
-//    //transporting player from the botton side of canvas to up side.
-//    if (player.y >= (canvas.height - player.height)) {
-//        player.y = 0;
-//    }
-//    if (player.x < 0) { //transporting player from the left side of canvas to right side.
-//        player.x = canvas.width - player.width;
-//    }
-//    if (player.y < 0) { //transporting player from the up side of canvas to botton side.
-//        player.y = canvas.height - player.height;
-//    }
-//
-//    player.updateCenter();
-//
-//    /* Controlling the pac man mouth */
-//    if (player.pacmouth == 320) {
-//        player.pacmouth = 352;
-//    } else {
-//        player.pacmouth = 320;
-//    }
 }
 
 /* Event listeners functions */
@@ -319,7 +305,24 @@ function collision(ObjectX, ObjectY){
     
     /* Identifying player object. this object has difference on center position and sprite position.
     It is adjusted by method updateCenter() from Player Object. */
-    if (typeof ObjectX.updateCenter === 'function'){ //Player object founded.
+    if(typeof ObjectX.updateCenter === 'function' && 
+            typeof ObjectY.updateCenter === 'function') { //Player/Enemy objects founded
+        /* Setting up ObjectX vertices */
+        x1 = (ObjectX.centerx - ObjectX.collisionsize);
+        y1 = (ObjectX.centery - ObjectX.collisionsize);
+        x2 = (ObjectX.centerx + ObjectX.collisionsize);
+        y2 = (ObjectX.centery + ObjectX.collisionsize);
+        
+        /* Setting up ObjectY vertices */
+        w1 = (ObjectY.centerx - ObjectY.collisionsize);
+        z1 = (ObjectY.centery - ObjectY.collisionsize);
+        w2 = (ObjectY.centerx + ObjectY.collisionsize);
+        z2 = (ObjectY.centery + ObjectY.collisionsize);
+        
+        //collision detection math calculations.
+        return collisionMath(x1, y1, x2, y2, w1, z1, w2, z2);
+    }
+    else if (typeof ObjectX.updateCenter === 'function'){ //Player object founded.
         /* Setting up ObjectX vertices */
         x1 = (ObjectX.centerx - ObjectX.collisionsize);
         y1 = (ObjectX.centery - ObjectX.collisionsize);
@@ -478,6 +481,7 @@ function endGame() {
     //show retry or exit screen.
 //    render(); //render the game canvas and elements.
 //    requestAnimationFrame(playGame); //Window object function to make a animation loop.
+    alert("GAME OVER");
 }
 
 /*  Function to render elements in canvas.
