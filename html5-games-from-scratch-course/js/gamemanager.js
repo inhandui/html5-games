@@ -396,15 +396,6 @@ function powerPillTime(){
     }
 }
 
-/* Function to play the game */
-function endGame() {
-    alert("GAME OVER");
-    //change player position
-    player.x = myNumber(canvas.width - 100) + 50; 
-    player.y = myNumber(canvas.height - 100) + 50;
-    player.update();
-}
-
 /*  Function to render elements in canvas.
     This function rendering in order. It is work like layers. 
     First element - botton layer. Last element - top layer. */
@@ -437,7 +428,10 @@ function render() {
         else {//player die
             //add score points
             gscore++;
-            endGame();
+            //change player position
+            player.x = myNumber(canvas.width - 100) + 50; 
+            player.y = myNumber(canvas.height - 100) + 50;
+            player.update();
         }
     }
     
