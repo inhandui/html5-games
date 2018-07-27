@@ -476,12 +476,11 @@ function powerPillTime(){
 
 /* Function to play the game */
 function endGame() {
-    //finish game for some reason.
-    //save states.
-    //show retry or exit screen.
-//    render(); //render the game canvas and elements.
-//    requestAnimationFrame(playGame); //Window object function to make a animation loop.
     alert("GAME OVER");
+    //change player position
+    player.x = myNumber(canvas.width - 100) + 50; 
+    player.y = myNumber(canvas.height - 100) + 50;
+    player.update();
 }
 
 /*  Function to render elements in canvas.
@@ -504,11 +503,18 @@ function render() {
     }
 //    Collision between player and ghost
     if (collision(player, enemy)) {
-        if (player.countdown>0) {//player eat enemy
-            //destroy enemy instance
+        if (player.countdown>0) {//player can eat enemy
+            //destroy or move enemy instance
+            ghost = false;
+            enemy.update();
+            //reset countdown
+            player.countdown = 0;
             //add score points
+            score++;
         }
         else {//player die
+            //add score points
+            gscore++;
             endGame();
         }
     }
