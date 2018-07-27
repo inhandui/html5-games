@@ -12,7 +12,7 @@ var player = { //Player object.
     height: 32, //Sprite height after draw.
     pacmouth: 320, //current mouth state.
     pacdirection: 0, //Current head direction.
-    speed: 5, //Player speed.
+    speed: 3, //Player speed.
     centerx: 0, //Sprite center. Used to calculate collision detection. 
     centery: 0, //Sprite center. Used to calculate collision detection.
     collisionsize: 12, //Size used to calculate collision area corners. Older value is 10.
@@ -40,6 +40,46 @@ var player = { //Player object.
     update: function(){ //function to update player properties.
         if (this.countdown>0) {
             this.countdown--;
+        }
+        this.move();
+    },
+    move: function () {
+        if (this.pacdirection == 64) { //pac-man go to left 
+            this.x -= this.speed;
+        }
+        if (this.pacdirection == 96) { //pac-man go up
+            this.y -= this.speed;
+        }
+        if (this.pacdirection == 0) { //pac-man go to right
+            this.x += this.speed;
+        }
+        if (this.pacdirection == 32) { //pac-man go down
+            this.y += this.speed;
+        }
+
+        /* Ensuring that player do not go over the canvas */
+        //transporting player from the right side of canvas to left side.
+        if (this.x >= (canvas.width - this.width)) {
+            this.x = 0;
+        }
+        //transporting player from the botton side of canvas to up side.
+        if (this.y >= (canvas.height - this.height)) {
+            this.y = 0;
+        }
+        if (this.x < 0) { //transporting player from the left side of canvas to right side.
+            this.x = canvas.width - this.width;
+        }
+        if (this.y < 0) { //transporting player from the up side of canvas to botton side.
+            this.y = canvas.height - this.height;
+        }
+        
+        this.updateCenter();
+
+        /* Controlling the pac man mouth */
+        if (this.pacmouth == 320) {
+            this.pacmouth = 352;
+        } else {
+            this.pacmouth = 320;
         }
     }
 };
@@ -185,46 +225,46 @@ var keyEvent = {}; //Used to capture key events and store to an array.
 /* Player movement function */
 function move(keyEvent) {
     if (37 in keyEvent) { //User pressed left key
-        player.x -= player.speed;
+//        player.x -= player.speed;
         player.pacdirection = 64;
     }
     if (38 in keyEvent) { //User pressed up key
-        player.y -= player.speed;
+//        player.y -= player.speed;
         player.pacdirection = 96;
     }
     if (39 in keyEvent) { //User pressed right key
-        player.x += player.speed;
+//        player.x += player.speed;
         player.pacdirection = 0;
     }
     if (40 in keyEvent) { //User pressed down key
-        player.y += player.speed;
+//        player.y += player.speed;
         player.pacdirection = 32;
     }
 
-    /* Ensuring that player do not go over the canvas */
-    //transporting player from the right side of canvas to left side.
-    if (player.x >= (canvas.width - player.width)) {
-        player.x = 0;
-    }
-    //transporting player from the botton side of canvas to up side.
-    if (player.y >= (canvas.height - player.height)) {
-        player.y = 0;
-    }
-    if (player.x < 0) { //transporting player from the left side of canvas to right side.
-        player.x = canvas.width - player.width;
-    }
-    if (player.y < 0) { //transporting player from the up side of canvas to botton side.
-        player.y = canvas.height - player.height;
-    }
-
-    player.updateCenter();
-
-    /* Controlling the pac man mouth */
-    if (player.pacmouth == 320) {
-        player.pacmouth = 352;
-    } else {
-        player.pacmouth = 320;
-    }
+//    /* Ensuring that player do not go over the canvas */
+//    //transporting player from the right side of canvas to left side.
+//    if (player.x >= (canvas.width - player.width)) {
+//        player.x = 0;
+//    }
+//    //transporting player from the botton side of canvas to up side.
+//    if (player.y >= (canvas.height - player.height)) {
+//        player.y = 0;
+//    }
+//    if (player.x < 0) { //transporting player from the left side of canvas to right side.
+//        player.x = canvas.width - player.width;
+//    }
+//    if (player.y < 0) { //transporting player from the up side of canvas to botton side.
+//        player.y = canvas.height - player.height;
+//    }
+//
+//    player.updateCenter();
+//
+//    /* Controlling the pac man mouth */
+//    if (player.pacmouth == 320) {
+//        player.pacmouth = 352;
+//    } else {
+//        player.pacmouth = 320;
+//    }
 }
 
 /* Event listeners functions */
