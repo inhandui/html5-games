@@ -206,10 +206,10 @@ var enemy = { //Enemy object.
 var powerdot = { //Powerdot object.
     x: 200, //X position on the canvas.
     y: 300, //Y position on the canvas.
-    radius: 20, //powerdot radius.
+    radius: 5, //powerdot radius.
     powerup: false, //current state of the powerdot. Controll whether powerdot will be set and draw or not.
     ghostNum: 0, //Ghost collor.
-    collisionsize: 15, //Size used to calculate collision area corners. 
+    collisionsize: 5, //Size used to calculate collision area corners. 
     draw: function () { //function to draw a powerdot on canvas.
         if (this.powerup) {
             context.fillStyle = "#ffffff";
@@ -498,7 +498,7 @@ function render() {
 
     /* Collision detection */
     //Collision between player and dot
-    if(collision(player, powerdot)){
+    if(collision(powerdot, player)){
         powerPillTime(); //make actions related to collision between player and powerdot.
     }
 //    Collision between player and ghost
