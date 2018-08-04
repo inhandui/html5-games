@@ -132,19 +132,19 @@ var enemy = { //Enemy object.
             //Even number change X direction and odd change Y direction. 
             if (this.moving % 2) {
                 if (player.x < this.x) {
-                    this.direction_x = -this.speed;
-                    this.flash = 64;
+                    this.direction_x = -this.speed; 
+                    this.flash = 64; //changing enemy "face direction" to the left
                 } else {
                     this.direction_x = this.speed;
-                    this.flash = 0;
+                    this.flash = 0; //changing enemy "face direction" to the right
                 }
             } else {
                 if (player.y < this.y) {
                     this.direction_y = -this.speed;
-                    this.flash = 96;
+                    this.flash = 96; //changing enemy "face direction" up
                 } else {
                     this.direction_y = this.speed;
-                    this.flash = 32;
+                    this.flash = 32; //changing enemy "face direction" down
                 }
             }
         }
@@ -226,9 +226,12 @@ var powerdot = { //Powerdot object.
                 this.x = myNumber(canvas.width - 100) + 50; 
                 this.y = myNumber(canvas.height - 100) + 50;
                 this.powerup = true;
+                /* change player velocity */
+                player.speed = 3;
             }
             else if (player.countdown<0 ) { //ensure consistent countdown value.
-                     player.countdown == 0;
+                player.countdown == 0;
+                player.speed = 3;
             }
         }
     }
@@ -387,6 +390,8 @@ function powerPillTime(){
         powerdot.y = 0; 
         /* Change player countdown */
         player.countdown = 500; //setting up the time to expire the powerdot.
+        /* Change player speed */
+        player.speed = 4;
         /* Store all ghosts collors */
         enemy.oldGhostNum = enemy.ghostNum; //store the old ghost number for be able to return to correct ghost collor.
         /* Change all ghosts collors */
