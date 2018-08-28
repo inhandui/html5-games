@@ -4,13 +4,13 @@ var context; //Used to create context elements.
 var spriteSheet; //Used to store the game sprite sheet.
 var score; //Used to store the pacman scores.
 var gscore; //Used to store the ghosts scores.
-var ghostcolor = {//Used to control ghost spawn.
+var ghostcolors = { //Used to control enemy colors used.
     red: false,
     orange: false,
     pink: false,
     green: false,
     purple: false
-}; 
+};
 var player = { //Player object.
     x: 50, //X position on the canvas.
     y: 100, //Y position on the canvas.
