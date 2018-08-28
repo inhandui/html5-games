@@ -5,7 +5,11 @@ var spriteSheet; //Used to store the game sprite sheet.
 var score; //Used to store the pacman scores.
 var gscore; //Used to store the ghosts scores.
 var ghostcolor = {//Used to control ghost spawn.
-    red: false
+    red: false,
+    orange: false,
+    pink: false,
+    green: false,
+    purple: false
 }; 
 var player = { //Player object.
     x: 50, //X position on the canvas.
@@ -179,7 +183,431 @@ var enemy1 = { //Enemy object. (red ghost)
             this.ghostNum =  0 * 64; //Setting ghost color to red.
             this.x = myNumber(canvas.width - 100) + 50; //Avoiding spawn enemy on the canvas corners.
             this.y = myNumber(canvas.height - 100) + 50; //Avoiding spawn enemy on the canvas corners.
-            ghostcolor.red = true; //Changing ghost color red status to true to avoid create more ghosts.
+            ghostcolor.red = true; //Changing red ghost color status to true.
+            this.eat = false;
+        }
+        /* Creating ghost movement */
+        if (player.countdown>0 && this.eat) { //player got powerup, so ghost will run away from the player whether player can eat enemies
+            /* Run away from the player */
+            this.move();
+            /* Blink */
+            if (player.countdown % 10 == 0) {
+                if (this.flash == 0) {
+                    this.flash = 32;
+                }
+                else {
+                    this.flash = 0;
+                }   
+            }
+        }
+        else {//ghost will go toward the player
+            if (this.eat) { //ensure the correct value for this.eat and get back the old collor.
+                this.eat = false;
+                this.ghostNum = this.oldGhostNum;
+            }
+            /* Run toward the player */
+            this.move();
+        }
+    }
+};
+var enemy2 = { //Enemy object. (orange ghost)
+    x: 150, //X position on the canvas.
+    y: 200, //Y position on the canvas.
+    width: 32, //sprite width after draw.
+    height: 32, //Sprite height after draw.
+    speed: 5, //Current speed.
+    centerx: 0, //Sprite center. Used to calculate collision detection. 
+    centery: 0, //Sprite center. Used to calculate collision detection.
+    collisionsize: 12, //Size used to calculate collision area corners.
+    moving: 0, //Current moving points.
+    pacdirection: 0, //Current eyes direction.
+    direction_x: 0, //X movement direction on canvas.
+    direction_y: 0, //Y movement direction on canvas.
+    ghostNum: 0,//Ghost collors based on numbers.
+    oldGhostNum: 0, //old ghostNum value.
+    flash: 0, //Allow enemy flash when powerdot is hit by the player.
+    eat: false, //verify whether player can eat enemy or not. True - player can eat. False - Player can't eat.
+    updateCenter: function () { //function to update center of player sprite.
+        this.centerx = this.x + 16;
+        this.centery = this.y + 16;
+    },
+    move: function(){ //calculates ghost movement
+        if (this.moving < 0) { //Testing whether enemy spend all moving points
+            this.moving = (myNumber(20) * 3) + myNumber(1); //randomizing movement "distance".
+            this.speed = myNumber(3) + 1; //Getting random speed always equals to 1 or more.
+            if (this.eat) {//Enemy can be eaten
+                this.speed = this.speed * (-1);//change velocity to enemy run away from player
+            }
+            /* clear last directions */
+            this.direction_x = 0; 
+            this.direction_y = 0;
+            //Even number change X direction and odd change Y direction. 
+            if (this.moving % 2) {
+                if (player.x < this.x) {
+                    this.direction_x = -this.speed; 
+                    this.flash = 64; //changing enemy "face direction" to the left
+                } else {
+                    this.direction_x = this.speed;
+                    this.flash = 0; //changing enemy "face direction" to the right
+                }
+            } else {
+                if (player.y < this.y) {
+                    this.direction_y = -this.speed;
+                    this.flash = 96; //changing enemy "face direction" up
+                } else {
+                    this.direction_y = this.speed;
+                    this.flash = 32; //changing enemy "face direction" down
+                }
+            }
+        }
+        /* change enemy position and reduce one step */
+        this.moving--;
+        this.x += this.direction_x;
+        this.y += this.direction_y;
+        /* Ensuring that enemy do not go over the canvas */
+        if (this.x >= (canvas.width - 32)) { //transporting enemy from the right side of canvas to left side.
+            this.x = 0;
+        }
+        if (this.y >= (canvas.height - 32)) { //transporting enemy from the botton side of canvas to up side.
+            this.y = 0;
+        }
+        if (this.x < 0) { //transporting enemy from the left side of canvas to right side.
+            this.x = canvas.width - 32;
+        }
+        if (this.y < 0) { //transporting enemy from the up side of canvas to botton side.
+            this.y = canvas.height - 32;
+        }
+        this.updateCenter();
+    },
+    draw: function(){//function to draw a enemy sprite on canvas.
+        //Drawing red enemy - to see how to drawImage() works look at in player.draw()
+        context.drawImage(spriteSheet, this.ghostNum, this.flash, this.width, this.height, this.x, this.y, this.width, this.height);
+    },
+    update: function(){ //function to update enemy properties.
+        /* Randomizing ghosts to get different ghosts colors */
+        if (!ghostcolor.orange) { //Testing whether ghost was not created.
+            this.ghostNum =  1 * 64; //Setting ghost color to orange.
+            this.x = myNumber(canvas.width - 100) + 50; //Avoiding spawn enemy on the canvas corners.
+            this.y = myNumber(canvas.height - 100) + 50; //Avoiding spawn enemy on the canvas corners.
+            ghostcolor.orange = true; //Changing orange ghost color status to true.
+            this.eat = false;
+        }
+        /* Creating ghost movement */
+        if (player.countdown>0 && this.eat) { //player got powerup, so ghost will run away from the player whether player can eat enemies
+            /* Run away from the player */
+            this.move();
+            /* Blink */
+            if (player.countdown % 10 == 0) {
+                if (this.flash == 0) {
+                    this.flash = 32;
+                }
+                else {
+                    this.flash = 0;
+                }   
+            }
+        }
+        else {//ghost will go toward the player
+            if (this.eat) { //ensure the correct value for this.eat and get back the old collor.
+                this.eat = false;
+                this.ghostNum = this.oldGhostNum;
+            }
+            /* Run toward the player */
+            this.move();
+        }
+    }
+};
+var enemy3 = { //Enemy object. (pink ghost)
+    x: 150, //X position on the canvas.
+    y: 200, //Y position on the canvas.
+    width: 32, //sprite width after draw.
+    height: 32, //Sprite height after draw.
+    speed: 5, //Current speed.
+    centerx: 0, //Sprite center. Used to calculate collision detection. 
+    centery: 0, //Sprite center. Used to calculate collision detection.
+    collisionsize: 12, //Size used to calculate collision area corners.
+    moving: 0, //Current moving points.
+    pacdirection: 0, //Current eyes direction.
+    direction_x: 0, //X movement direction on canvas.
+    direction_y: 0, //Y movement direction on canvas.
+    ghostNum: 0,//Ghost collors based on numbers.
+    oldGhostNum: 0, //old ghostNum value.
+    flash: 0, //Allow enemy flash when powerdot is hit by the player.
+    eat: false, //verify whether player can eat enemy or not. True - player can eat. False - Player can't eat.
+    updateCenter: function () { //function to update center of player sprite.
+        this.centerx = this.x + 16;
+        this.centery = this.y + 16;
+    },
+    move: function(){ //calculates ghost movement
+        if (this.moving < 0) { //Testing whether enemy spend all moving points
+            this.moving = (myNumber(20) * 3) + myNumber(1); //randomizing movement "distance".
+            this.speed = myNumber(3) + 1; //Getting random speed always equals to 1 or more.
+            if (this.eat) {//Enemy can be eaten
+                this.speed = this.speed * (-1);//change velocity to enemy run away from player
+            }
+            /* clear last directions */
+            this.direction_x = 0; 
+            this.direction_y = 0;
+            //Even number change X direction and odd change Y direction. 
+            if (this.moving % 2) {
+                if (player.x < this.x) {
+                    this.direction_x = -this.speed; 
+                    this.flash = 64; //changing enemy "face direction" to the left
+                } else {
+                    this.direction_x = this.speed;
+                    this.flash = 0; //changing enemy "face direction" to the right
+                }
+            } else {
+                if (player.y < this.y) {
+                    this.direction_y = -this.speed;
+                    this.flash = 96; //changing enemy "face direction" up
+                } else {
+                    this.direction_y = this.speed;
+                    this.flash = 32; //changing enemy "face direction" down
+                }
+            }
+        }
+        /* change enemy position and reduce one step */
+        this.moving--;
+        this.x += this.direction_x;
+        this.y += this.direction_y;
+        /* Ensuring that enemy do not go over the canvas */
+        if (this.x >= (canvas.width - 32)) { //transporting enemy from the right side of canvas to left side.
+            this.x = 0;
+        }
+        if (this.y >= (canvas.height - 32)) { //transporting enemy from the botton side of canvas to up side.
+            this.y = 0;
+        }
+        if (this.x < 0) { //transporting enemy from the left side of canvas to right side.
+            this.x = canvas.width - 32;
+        }
+        if (this.y < 0) { //transporting enemy from the up side of canvas to botton side.
+            this.y = canvas.height - 32;
+        }
+        this.updateCenter();
+    },
+    draw: function(){//function to draw a enemy sprite on canvas.
+        //Drawing red enemy - to see how to drawImage() works look at in player.draw()
+        context.drawImage(spriteSheet, this.ghostNum, this.flash, this.width, this.height, this.x, this.y, this.width, this.height);
+    },
+    update: function(){ //function to update enemy properties.
+        /* Randomizing ghosts to get different ghosts colors */
+        if (!ghostcolor.pink) { //Testing whether ghost was not created.
+            this.ghostNum =  2 * 64; //Setting ghost color to pink.
+            this.x = myNumber(canvas.width - 100) + 50; //Avoiding spawn enemy on the canvas corners.
+            this.y = myNumber(canvas.height - 100) + 50; //Avoiding spawn enemy on the canvas corners.
+            ghostcolor.pink = true; //Changing pink ghost color status to true.
+            this.eat = false;
+        }
+        /* Creating ghost movement */
+        if (player.countdown>0 && this.eat) { //player got powerup, so ghost will run away from the player whether player can eat enemies
+            /* Run away from the player */
+            this.move();
+            /* Blink */
+            if (player.countdown % 10 == 0) {
+                if (this.flash == 0) {
+                    this.flash = 32;
+                }
+                else {
+                    this.flash = 0;
+                }   
+            }
+        }
+        else {//ghost will go toward the player
+            if (this.eat) { //ensure the correct value for this.eat and get back the old collor.
+                this.eat = false;
+                this.ghostNum = this.oldGhostNum;
+            }
+            /* Run toward the player */
+            this.move();
+        }
+    }
+};
+var enemy4 = { //Enemy object. (green ghost)
+    x: 150, //X position on the canvas.
+    y: 200, //Y position on the canvas.
+    width: 32, //sprite width after draw.
+    height: 32, //Sprite height after draw.
+    speed: 5, //Current speed.
+    centerx: 0, //Sprite center. Used to calculate collision detection. 
+    centery: 0, //Sprite center. Used to calculate collision detection.
+    collisionsize: 12, //Size used to calculate collision area corners.
+    moving: 0, //Current moving points.
+    pacdirection: 0, //Current eyes direction.
+    direction_x: 0, //X movement direction on canvas.
+    direction_y: 0, //Y movement direction on canvas.
+    ghostNum: 0,//Ghost collors based on numbers.
+    oldGhostNum: 0, //old ghostNum value.
+    flash: 0, //Allow enemy flash when powerdot is hit by the player.
+    eat: false, //verify whether player can eat enemy or not. True - player can eat. False - Player can't eat.
+    updateCenter: function () { //function to update center of player sprite.
+        this.centerx = this.x + 16;
+        this.centery = this.y + 16;
+    },
+    move: function(){ //calculates ghost movement
+        if (this.moving < 0) { //Testing whether enemy spend all moving points
+            this.moving = (myNumber(20) * 3) + myNumber(1); //randomizing movement "distance".
+            this.speed = myNumber(3) + 1; //Getting random speed always equals to 1 or more.
+            if (this.eat) {//Enemy can be eaten
+                this.speed = this.speed * (-1);//change velocity to enemy run away from player
+            }
+            /* clear last directions */
+            this.direction_x = 0; 
+            this.direction_y = 0;
+            //Even number change X direction and odd change Y direction. 
+            if (this.moving % 2) {
+                if (player.x < this.x) {
+                    this.direction_x = -this.speed; 
+                    this.flash = 64; //changing enemy "face direction" to the left
+                } else {
+                    this.direction_x = this.speed;
+                    this.flash = 0; //changing enemy "face direction" to the right
+                }
+            } else {
+                if (player.y < this.y) {
+                    this.direction_y = -this.speed;
+                    this.flash = 96; //changing enemy "face direction" up
+                } else {
+                    this.direction_y = this.speed;
+                    this.flash = 32; //changing enemy "face direction" down
+                }
+            }
+        }
+        /* change enemy position and reduce one step */
+        this.moving--;
+        this.x += this.direction_x;
+        this.y += this.direction_y;
+        /* Ensuring that enemy do not go over the canvas */
+        if (this.x >= (canvas.width - 32)) { //transporting enemy from the right side of canvas to left side.
+            this.x = 0;
+        }
+        if (this.y >= (canvas.height - 32)) { //transporting enemy from the botton side of canvas to up side.
+            this.y = 0;
+        }
+        if (this.x < 0) { //transporting enemy from the left side of canvas to right side.
+            this.x = canvas.width - 32;
+        }
+        if (this.y < 0) { //transporting enemy from the up side of canvas to botton side.
+            this.y = canvas.height - 32;
+        }
+        this.updateCenter();
+    },
+    draw: function(){//function to draw a enemy sprite on canvas.
+        //Drawing red enemy - to see how to drawImage() works look at in player.draw()
+        context.drawImage(spriteSheet, this.ghostNum, this.flash, this.width, this.height, this.x, this.y, this.width, this.height);
+    },
+    update: function(){ //function to update enemy properties.
+        /* Randomizing ghosts to get different ghosts colors */
+        if (!ghostcolor.green) { //Testing whether ghost was not created.
+            this.ghostNum =  3 * 64; //Setting ghost color to red.
+            this.x = myNumber(canvas.width - 100) + 50; //Avoiding spawn enemy on the canvas corners.
+            this.y = myNumber(canvas.height - 100) + 50; //Avoiding spawn enemy on the canvas corners.
+            ghostcolor.green = true; //Changing green ghost color status to true.
+            this.eat = false;
+        }
+        /* Creating ghost movement */
+        if (player.countdown>0 && this.eat) { //player got powerup, so ghost will run away from the player whether player can eat enemies
+            /* Run away from the player */
+            this.move();
+            /* Blink */
+            if (player.countdown % 10 == 0) {
+                if (this.flash == 0) {
+                    this.flash = 32;
+                }
+                else {
+                    this.flash = 0;
+                }   
+            }
+        }
+        else {//ghost will go toward the player
+            if (this.eat) { //ensure the correct value for this.eat and get back the old collor.
+                this.eat = false;
+                this.ghostNum = this.oldGhostNum;
+            }
+            /* Run toward the player */
+            this.move();
+        }
+    }
+};
+var enemy5 = { //Enemy object. (purple ghost)
+    x: 150, //X position on the canvas.
+    y: 200, //Y position on the canvas.
+    width: 32, //sprite width after draw.
+    height: 32, //Sprite height after draw.
+    speed: 5, //Current speed.
+    centerx: 0, //Sprite center. Used to calculate collision detection. 
+    centery: 0, //Sprite center. Used to calculate collision detection.
+    collisionsize: 12, //Size used to calculate collision area corners.
+    moving: 0, //Current moving points.
+    pacdirection: 0, //Current eyes direction.
+    direction_x: 0, //X movement direction on canvas.
+    direction_y: 0, //Y movement direction on canvas.
+    ghostNum: 0,//Ghost collors based on numbers.
+    oldGhostNum: 0, //old ghostNum value.
+    flash: 0, //Allow enemy flash when powerdot is hit by the player.
+    eat: false, //verify whether player can eat enemy or not. True - player can eat. False - Player can't eat.
+    updateCenter: function () { //function to update center of player sprite.
+        this.centerx = this.x + 16;
+        this.centery = this.y + 16;
+    },
+    move: function(){ //calculates ghost movement
+        if (this.moving < 0) { //Testing whether enemy spend all moving points
+            this.moving = (myNumber(20) * 3) + myNumber(1); //randomizing movement "distance".
+            this.speed = myNumber(3) + 1; //Getting random speed always equals to 1 or more.
+            if (this.eat) {//Enemy can be eaten
+                this.speed = this.speed * (-1);//change velocity to enemy run away from player
+            }
+            /* clear last directions */
+            this.direction_x = 0; 
+            this.direction_y = 0;
+            //Even number change X direction and odd change Y direction. 
+            if (this.moving % 2) {
+                if (player.x < this.x) {
+                    this.direction_x = -this.speed; 
+                    this.flash = 64; //changing enemy "face direction" to the left
+                } else {
+                    this.direction_x = this.speed;
+                    this.flash = 0; //changing enemy "face direction" to the right
+                }
+            } else {
+                if (player.y < this.y) {
+                    this.direction_y = -this.speed;
+                    this.flash = 96; //changing enemy "face direction" up
+                } else {
+                    this.direction_y = this.speed;
+                    this.flash = 32; //changing enemy "face direction" down
+                }
+            }
+        }
+        /* change enemy position and reduce one step */
+        this.moving--;
+        this.x += this.direction_x;
+        this.y += this.direction_y;
+        /* Ensuring that enemy do not go over the canvas */
+        if (this.x >= (canvas.width - 32)) { //transporting enemy from the right side of canvas to left side.
+            this.x = 0;
+        }
+        if (this.y >= (canvas.height - 32)) { //transporting enemy from the botton side of canvas to up side.
+            this.y = 0;
+        }
+        if (this.x < 0) { //transporting enemy from the left side of canvas to right side.
+            this.x = canvas.width - 32;
+        }
+        if (this.y < 0) { //transporting enemy from the up side of canvas to botton side.
+            this.y = canvas.height - 32;
+        }
+        this.updateCenter();
+    },
+    draw: function(){//function to draw a enemy sprite on canvas.
+        //Drawing red enemy - to see how to drawImage() works look at in player.draw()
+        context.drawImage(spriteSheet, this.ghostNum, this.flash, this.width, this.height, this.x, this.y, this.width, this.height);
+    },
+    update: function(){ //function to update enemy properties.
+        /* Randomizing ghosts to get different ghosts colors */
+        if (!ghostcolor.purple) { //Testing whether ghost was not created.
+            this.ghostNum =  4 * 64; //Setting ghost color to purple.
+            this.x = myNumber(canvas.width - 100) + 50; //Avoiding spawn enemy on the canvas corners.
+            this.y = myNumber(canvas.height - 100) + 50; //Avoiding spawn enemy on the canvas corners.
+            ghostcolor.purple = true; //Changing ghost color red status to true to avoid create more ghosts.
             this.eat = false;
         }
         /* Creating ghost movement */
@@ -395,12 +823,26 @@ function powerPillTime(){
         player.countdown = 500; //setting up the time to expire the powerdot.
         /* Change player speed */
         player.speed = 4;
-        /* Store all ghosts collors */
-        enemy1.oldGhostNum = enemy1.ghostNum; //store the old ghost number for be able to return to correct ghost collor.
+        /* Store all ghosts collors 
+         * Store the old ghost number to be able to turn back to correct ghost collor.
+        */
+        enemy1.oldGhostNum = enemy1.ghostNum;
+        enemy2.oldGhostNum = enemy2.ghostNum;
+        enemy3.oldGhostNum = enemy3.ghostNum;
+        enemy4.oldGhostNum = enemy4.ghostNum;
+        enemy5.oldGhostNum = enemy5.ghostNum;
         /* Change all ghosts collors */
         enemy1.ghostNum = 384; //setting to the "blinking" ghost.
+        enemy2.ghostNum = 384; //setting to the "blinking" ghost.
+        enemy3.ghostNum = 384; //setting to the "blinking" ghost.
+        enemy4.ghostNum = 384; //setting to the "blinking" ghost.
+        enemy5.ghostNum = 384; //setting to the "blinking" ghost.
         /* Change enemy eat state */
         enemy1.eat = true;
+        enemy2.eat = true;
+        enemy3.eat = true;
+        enemy4.eat = true;
+        enemy5.eat = true;
     }
 }
 
@@ -415,6 +857,10 @@ function render() {
     /* Update elements */
     powerdot.update();
     enemy1.update();
+    enemy2.update();
+    enemy3.update();
+    enemy4.update();
+    enemy5.update();
     player.update();
 
     /* Collision detection */
@@ -422,7 +868,7 @@ function render() {
     if(collision(powerdot, player)){
         powerPillTime(); //make actions related to collision between player and powerdot.
     }
-//    Collision between player and ghost
+    /* Collision between player and red ghost */
     if (collision(player, enemy1)) {
         if (player.countdown>0 &&  enemy1.eat) {//player can eat enemy
             //destroy or move enemy instance
@@ -441,9 +887,89 @@ function render() {
         }
     }
     
+    /* Collision between player and orange ghost */
+    if (collision(player, enemy2)) {
+        if (player.countdown>0 &&  enemy2.eat) {//player can eat enemy
+            //destroy or move enemy instance
+            ghostcolor.orange = false;
+            enemy2.update();
+            //add score points
+            score++;
+        }
+        else {//player die
+            //add score points
+            gscore++;
+            //change player position
+            player.x = myNumber(canvas.width - 100) + 50; 
+            player.y = myNumber(canvas.height - 100) + 50;
+            player.update();
+        }
+    }
+    
+    /* Collision between player and pink ghost */
+    if (collision(player, enemy3)) {
+        if (player.countdown>0 &&  enemy3.eat) {//player can eat enemy
+            //destroy or move enemy instance
+            ghostcolor.pink = false;
+            enemy3.update();
+            //add score points
+            score++;
+        }
+        else {//player die
+            //add score points
+            gscore++;
+            //change player position
+            player.x = myNumber(canvas.width - 100) + 50; 
+            player.y = myNumber(canvas.height - 100) + 50;
+            player.update();
+        }
+    }
+    
+    /* Collision between player and green ghost */
+    if (collision(player, enemy4)) {
+        if (player.countdown>0 &&  enemy4.eat) {//player can eat enemy
+            //destroy or move enemy instance
+            ghostcolor.green = false;
+            enemy4.update();
+            //add score points
+            score++;
+        }
+        else {//player die
+            //add score points
+            gscore++;
+            //change player position
+            player.x = myNumber(canvas.width - 100) + 50; 
+            player.y = myNumber(canvas.height - 100) + 50;
+            player.update();
+        }
+    }
+    
+    /* Collision between player and purple ghost */
+    if (collision(player, enemy5)) {
+        if (player.countdown>0 &&  enemy5.eat) {//player can eat enemy
+            //destroy or move enemy instance
+            ghostcolor.purple = false;
+            enemy5.update();
+            //add score points
+            score++;
+        }
+        else {//player die
+            //add score points
+            gscore++;
+            //change player position
+            player.x = myNumber(canvas.width - 100) + 50; 
+            player.y = myNumber(canvas.height - 100) + 50;
+            player.update();
+        }
+    }
+    
     /* Drawing elements */
     powerdot.draw();
     enemy1.draw();
+    enemy2.draw();
+    enemy3.draw();
+    enemy4.draw();
+    enemy5.draw();
     player.draw();
 
     /* Drawing basic Heads Up Display */
@@ -473,6 +999,10 @@ function setup() {
     /* setting up center */
     player.updateCenter(); //player center
     enemy1.updateCenter(); //enemy center
+    enemy2.updateCenter(); //enemy center
+    enemy3.updateCenter(); //enemy center
+    enemy4.updateCenter(); //enemy center
+    enemy5.updateCenter(); //enemy center
 
     /* Creating the canvas */
     canvas = document.createElement("canvas");
