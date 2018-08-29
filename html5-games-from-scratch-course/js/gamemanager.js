@@ -4,7 +4,7 @@ var context; //Used to create context elements.
 var spriteSheet; //Used to store the game sprite sheet.
 var score; //Used to store the pacman scores.
 var gscore; //Used to store the ghosts scores.
-var ghostcolors = { //Used to control enemy colors used.
+var ghostcolor = { //Used to control enemy colors used.
     red: false,
     orange: false,
     pink: false,
@@ -876,10 +876,12 @@ function render() {
             enemy1.update();
             //add score points
             score++;
+            //alert("You eat the red ghost");
         }
         else {//player die
             //add score points
             gscore++;
+            //alert("You was eaten by the red ghost");
             //change player position
             player.x = myNumber(canvas.width - 100) + 50; 
             player.y = myNumber(canvas.height - 100) + 50;
@@ -895,10 +897,12 @@ function render() {
             enemy2.update();
             //add score points
             score++;
+            //alert("You eate the orange ghost");
         }
         else {//player die
             //add score points
             gscore++;
+            //alert("You was eaten by the orange ghost");
             //change player position
             player.x = myNumber(canvas.width - 100) + 50; 
             player.y = myNumber(canvas.height - 100) + 50;
@@ -914,10 +918,12 @@ function render() {
             enemy3.update();
             //add score points
             score++;
+            //alert("You eat the pink ghost");
         }
         else {//player die
             //add score points
             gscore++;
+            //alert("You was eaten by the pink ghost");
             //change player position
             player.x = myNumber(canvas.width - 100) + 50; 
             player.y = myNumber(canvas.height - 100) + 50;
@@ -933,10 +939,12 @@ function render() {
             enemy4.update();
             //add score points
             score++;
+            //alert("You eat the green ghost");
         }
         else {//player die
             //add score points
             gscore++;
+            //alert("You was eaten by the pink ghost");
             //change player position
             player.x = myNumber(canvas.width - 100) + 50; 
             player.y = myNumber(canvas.height - 100) + 50;
@@ -952,10 +960,12 @@ function render() {
             enemy5.update();
             //add score points
             score++;
+            //alert("You eat the purple ghost");
         }
         else {//player die
             //add score points
             gscore++;
+            //alert("You was eaten by the purple ghost");
             //change player position
             player.x = myNumber(canvas.width - 100) + 50; 
             player.y = myNumber(canvas.height - 100) + 50;
