@@ -563,18 +563,27 @@ var enemy5 = { //Enemy object. (purple ghost)
             if (this.moving % 2) {
                 if (player.x < this.x) {
                     this.direction_x = -this.speed; 
-                    this.flash = 64; //changing enemy "face direction" to the left
+                    if (!this.eat){
+                        this.flash = 64; //changing enemy "face direction" to the left    
+                    }
+                    
                 } else {
                     this.direction_x = this.speed;
-                    this.flash = 0; //changing enemy "face direction" to the right
+                    if (!this.eat){
+                        this.flash = 0; //changing enemy "face direction" to the right
+                    }
                 }
             } else {
                 if (player.y < this.y) {
                     this.direction_y = -this.speed;
-                    this.flash = 96; //changing enemy "face direction" up
+                    if (!this.eat){
+                        this.flash = 96; //changing enemy "face direction" up
+                    }
                 } else {
                     this.direction_y = this.speed;
-                    this.flash = 32; //changing enemy "face direction" down
+                    if (!this.eat){
+                        this.flash = 32; //changing enemy "face direction" down
+                    }
                 }
             }
         }
@@ -615,7 +624,7 @@ var enemy5 = { //Enemy object. (purple ghost)
             /* Run away from the player */
             this.move();
             /* Blink */
-            if (player.countdown % 10 == 0) {
+            if (player.countdown % 10 == 0 && player.countdown < 150) {
                 if (this.flash == 0) {
                     this.flash = 32;
                 }
