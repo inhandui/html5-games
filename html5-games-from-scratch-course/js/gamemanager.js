@@ -566,7 +566,6 @@ var enemy5 = { //Enemy object. (purple ghost)
                     if (!this.eat){
                         this.flash = 64; //changing enemy "face direction" to the left    
                     }
-                    
                 } else {
                     this.direction_x = this.speed;
                     if (!this.eat){
@@ -835,22 +834,23 @@ function powerPillTime(){
         /* Store all ghosts collors 
          * Store the old ghost number to be able to turn back to correct ghost collor.
         */
-//        enemy1.oldGhostNum = enemy1.ghostNum;
-//        enemy2.oldGhostNum = enemy2.ghostNum;
-//        enemy3.oldGhostNum = enemy3.ghostNum;
-//        enemy4.oldGhostNum = enemy4.ghostNum;
+        enemy1.oldGhostNum = enemy1.ghostNum;
+        enemy2.oldGhostNum = enemy2.ghostNum;
+        enemy3.oldGhostNum = enemy3.ghostNum;
+        enemy4.oldGhostNum = enemy4.ghostNum;
         enemy5.oldGhostNum = enemy5.ghostNum;
         /* Change all ghosts collors */
-//        enemy1.ghostNum = 384; //setting to the "blinking" ghost.
-//        enemy2.ghostNum = 384; //setting to the "blinking" ghost.
-//        enemy3.ghostNum = 384; //setting to the "blinking" ghost.
-//        enemy4.ghostNum = 384; //setting to the "blinking" ghost.
+        enemy1.ghostNum = 384; //setting to the "blinking" ghost.
+        enemy2.ghostNum = 384; //setting to the "blinking" ghost.
+        enemy3.ghostNum = 384; //setting to the "blinking" ghost.
+        enemy4.ghostNum = 384; //setting to the "blinking" ghost.
+        enemy5.flash = 0;
         enemy5.ghostNum = 384; //setting to the "blinking" ghost.
         /* Change enemy eat state */
-//        enemy1.eat = true;
-//        enemy2.eat = true;
-//        enemy3.eat = true;
-//        enemy4.eat = true;
+        enemy1.eat = true;
+        enemy2.eat = true;
+        enemy3.eat = true;
+        enemy4.eat = true;
         enemy5.eat = true;
     }
 }
@@ -865,10 +865,10 @@ function render() {
 
     /* Update elements */
     powerdot.update();
-//    enemy1.update();
-//    enemy2.update();
-//    enemy3.update();
-//    enemy4.update();
+    enemy1.update();
+    enemy2.update();
+    enemy3.update();
+    enemy4.update();
     enemy5.update();
     player.update();
 
