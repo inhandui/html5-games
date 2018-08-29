@@ -826,22 +826,22 @@ function powerPillTime(){
         /* Store all ghosts collors 
          * Store the old ghost number to be able to turn back to correct ghost collor.
         */
-        enemy1.oldGhostNum = enemy1.ghostNum;
-        enemy2.oldGhostNum = enemy2.ghostNum;
-        enemy3.oldGhostNum = enemy3.ghostNum;
-        enemy4.oldGhostNum = enemy4.ghostNum;
+//        enemy1.oldGhostNum = enemy1.ghostNum;
+//        enemy2.oldGhostNum = enemy2.ghostNum;
+//        enemy3.oldGhostNum = enemy3.ghostNum;
+//        enemy4.oldGhostNum = enemy4.ghostNum;
         enemy5.oldGhostNum = enemy5.ghostNum;
         /* Change all ghosts collors */
-        enemy1.ghostNum = 384; //setting to the "blinking" ghost.
-        enemy2.ghostNum = 384; //setting to the "blinking" ghost.
-        enemy3.ghostNum = 384; //setting to the "blinking" ghost.
-        enemy4.ghostNum = 384; //setting to the "blinking" ghost.
+//        enemy1.ghostNum = 384; //setting to the "blinking" ghost.
+//        enemy2.ghostNum = 384; //setting to the "blinking" ghost.
+//        enemy3.ghostNum = 384; //setting to the "blinking" ghost.
+//        enemy4.ghostNum = 384; //setting to the "blinking" ghost.
         enemy5.ghostNum = 384; //setting to the "blinking" ghost.
         /* Change enemy eat state */
-        enemy1.eat = true;
-        enemy2.eat = true;
-        enemy3.eat = true;
-        enemy4.eat = true;
+//        enemy1.eat = true;
+//        enemy2.eat = true;
+//        enemy3.eat = true;
+//        enemy4.eat = true;
         enemy5.eat = true;
     }
 }
@@ -856,10 +856,10 @@ function render() {
 
     /* Update elements */
     powerdot.update();
-    enemy1.update();
-    enemy2.update();
-    enemy3.update();
-    enemy4.update();
+//    enemy1.update();
+//    enemy2.update();
+//    enemy3.update();
+//    enemy4.update();
     enemy5.update();
     player.update();
 
@@ -868,90 +868,90 @@ function render() {
     if(collision(powerdot, player)){
         powerPillTime(); //make actions related to collision between player and powerdot.
     }
-    /* Collision between player and red ghost */
-    if (collision(player, enemy1)) {
-        if (player.countdown>0 &&  enemy1.eat) {//player can eat enemy
-            //destroy or move enemy instance
-            ghostcolor.red = false;
-            enemy1.update();
-            //add score points
-            score++;
-            //alert("You eat the red ghost");
-        }
-        else {//player die
-            //add score points
-            gscore++;
-            //alert("You was eaten by the red ghost");
-            //change player position
-            player.x = myNumber(canvas.width - 100) + 50; 
-            player.y = myNumber(canvas.height - 100) + 50;
-            player.update();
-        }
-    }
-    
-    /* Collision between player and orange ghost */
-    if (collision(player, enemy2)) {
-        if (player.countdown>0 &&  enemy2.eat) {//player can eat enemy
-            //destroy or move enemy instance
-            ghostcolor.orange = false;
-            enemy2.update();
-            //add score points
-            score++;
-            //alert("You eate the orange ghost");
-        }
-        else {//player die
-            //add score points
-            gscore++;
-            //alert("You was eaten by the orange ghost");
-            //change player position
-            player.x = myNumber(canvas.width - 100) + 50; 
-            player.y = myNumber(canvas.height - 100) + 50;
-            player.update();
-        }
-    }
-    
-    /* Collision between player and pink ghost */
-    if (collision(player, enemy3)) {
-        if (player.countdown>0 &&  enemy3.eat) {//player can eat enemy
-            //destroy or move enemy instance
-            ghostcolor.pink = false;
-            enemy3.update();
-            //add score points
-            score++;
-            //alert("You eat the pink ghost");
-        }
-        else {//player die
-            //add score points
-            gscore++;
-            //alert("You was eaten by the pink ghost");
-            //change player position
-            player.x = myNumber(canvas.width - 100) + 50; 
-            player.y = myNumber(canvas.height - 100) + 50;
-            player.update();
-        }
-    }
-    
-    /* Collision between player and green ghost */
-    if (collision(player, enemy4)) {
-        if (player.countdown>0 &&  enemy4.eat) {//player can eat enemy
-            //destroy or move enemy instance
-            ghostcolor.green = false;
-            enemy4.update();
-            //add score points
-            score++;
-            //alert("You eat the green ghost");
-        }
-        else {//player die
-            //add score points
-            gscore++;
-            //alert("You was eaten by the pink ghost");
-            //change player position
-            player.x = myNumber(canvas.width - 100) + 50; 
-            player.y = myNumber(canvas.height - 100) + 50;
-            player.update();
-        }
-    }
-    
+//    /* Collision between player and red ghost */
+//    if (collision(player, enemy1)) {
+//        if (player.countdown>0 &&  enemy1.eat) {//player can eat enemy
+//            //destroy or move enemy instance
+//            ghostcolor.red = false;
+//            enemy1.update();
+//            //add score points
+//            score++;
+//            //alert("You eat the red ghost");
+//        }
+//        else {//player die
+//            //add score points
+//            gscore++;
+//            //alert("You was eaten by the red ghost");
+//            //change player position
+//            player.x = myNumber(canvas.width - 100) + 50; 
+//            player.y = myNumber(canvas.height - 100) + 50;
+//            player.update();
+//        }
+//    }
+//    
+//    /* Collision between player and orange ghost */
+//    if (collision(player, enemy2)) {
+//        if (player.countdown>0 &&  enemy2.eat) {//player can eat enemy
+//            //destroy or move enemy instance
+//            ghostcolor.orange = false;
+//            enemy2.update();
+//            //add score points
+//            score++;
+//            //alert("You eate the orange ghost");
+//        }
+//        else {//player die
+//            //add score points
+//            gscore++;
+//            //alert("You was eaten by the orange ghost");
+//            //change player position
+//            player.x = myNumber(canvas.width - 100) + 50; 
+//            player.y = myNumber(canvas.height - 100) + 50;
+//            player.update();
+//        }
+//    }
+//    
+//    /* Collision between player and pink ghost */
+//    if (collision(player, enemy3)) {
+//        if (player.countdown>0 &&  enemy3.eat) {//player can eat enemy
+//            //destroy or move enemy instance
+//            ghostcolor.pink = false;
+//            enemy3.update();
+//            //add score points
+//            score++;
+//            //alert("You eat the pink ghost");
+//        }
+//        else {//player die
+//            //add score points
+//            gscore++;
+//            //alert("You was eaten by the pink ghost");
+//            //change player position
+//            player.x = myNumber(canvas.width - 100) + 50; 
+//            player.y = myNumber(canvas.height - 100) + 50;
+//            player.update();
+//        }
+//    }
+//    
+//    /* Collision between player and green ghost */
+//    if (collision(player, enemy4)) {
+//        if (player.countdown>0 &&  enemy4.eat) {//player can eat enemy
+//            //destroy or move enemy instance
+//            ghostcolor.green = false;
+//            enemy4.update();
+//            //add score points
+//            score++;
+//            //alert("You eat the green ghost");
+//        }
+//        else {//player die
+//            //add score points
+//            gscore++;
+//            //alert("You was eaten by the pink ghost");
+//            //change player position
+//            player.x = myNumber(canvas.width - 100) + 50; 
+//            player.y = myNumber(canvas.height - 100) + 50;
+//            player.update();
+//        }
+//    }
+//    
     /* Collision between player and purple ghost */
     if (collision(player, enemy5)) {
         if (player.countdown>0 &&  enemy5.eat) {//player can eat enemy
@@ -975,10 +975,10 @@ function render() {
     
     /* Drawing elements */
     powerdot.draw();
-    enemy1.draw();
-    enemy2.draw();
-    enemy3.draw();
-    enemy4.draw();
+//    enemy1.draw();
+//    enemy2.draw();
+//    enemy3.draw();
+//    enemy4.draw();
     enemy5.draw();
     player.draw();
 
@@ -1008,10 +1008,10 @@ function setup() {
 
     /* setting up center */
     player.updateCenter(); //player center
-    enemy1.updateCenter(); //enemy center
-    enemy2.updateCenter(); //enemy center
-    enemy3.updateCenter(); //enemy center
-    enemy4.updateCenter(); //enemy center
+//    enemy1.updateCenter(); //enemy center
+//    enemy2.updateCenter(); //enemy center
+//    enemy3.updateCenter(); //enemy center
+//    enemy4.updateCenter(); //enemy center
     enemy5.updateCenter(); //enemy center
 
     /* Creating the canvas */
