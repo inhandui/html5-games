@@ -163,6 +163,62 @@ function e_move(){ //calculates enemy (ghost) movement
     this.updateCenter();
 }
 
+function new_e_move(){ //calculates enemy (ghost) movement
+    if (this.moving < 0) { //Testing whether enemy spend all moving points
+        this.moving = (myNumber(20) * 3) + myNumber(1); //randomizing movement "distance".
+        this.speed = myNumber(3) + 1; //Getting random speed always equals to 1 or more.
+        /* clear last directions */
+        this.direction_x = 0; 
+        this.direction_y = 0;
+        
+        if (this.defeat || this.ghostColor == 384) {//Enemy can be defeated or already defeated.
+            this.speed = this.speed * (-1);//change velocity to enemy run away from player.
+            //Even number change X direction and odd change Y direction. 
+            if (this.moving % 2) {
+                if (player.x < this.x) {
+                    this.direction_x = -this.speed; 
+                } else {
+                    this.direction_x = this.speed;
+                }
+            } else {
+                if (player.y < this.y) {
+                    this.direction_y = -this.speed;
+                } else {
+                    this.direction_y = this.speed;
+                }
+            }
+        }
+        else {
+            //Even number change X direction and odd change Y direction. 
+            if (this.moving % 2) {
+                if (player.x < this.x) {
+                    this.direction_x = -this.speed; 
+                    this.flash = 64; //changing enemy "face direction" to the left
+                } else {
+                    this.direction_x = this.speed;
+                    this.flash = 0; //changing enemy "face direction" to the right
+                }
+            } else {
+                if (player.y < this.y) {
+                    this.direction_y = -this.speed;
+                    this.flash = 96; //changing enemy "face direction" up
+                } else {
+                    this.direction_y = this.speed;
+                    this.flash = 32; //changing enemy "face direction" down
+                }
+            }
+        }
+    }
+    /* change enemy position and reduce one step */
+    this.moving--;
+    this.x += this.direction_x;
+    this.y += this.direction_y;
+    /* Ensuring that enemy do not go over the canvas */
+    this.canvasControl();
+    //update sprite collision center
+    this.updateCenter();
+}
+
 function e_draw(){//function to draw a enemy sprite on canvas.
     //Drawing red enemy - to see how to drawImage() works look at in player.draw()
     context.drawImage(spriteSheet, this.ghostColor, this.flash, this.width, this.height, this.x, this.y, this.width, this.height);
@@ -200,33 +256,40 @@ function e_update(){ //function to update enemy properties.
         this.move();
     }
 }
+
 function new_e_update(){ //new function to update enemy properties.
     if (this.defeat){ //Enemy can be defeated
-        if (player.countdown > 0){ //powerpill is still active
+        if (player.countdown > 0){ //powerpill is still active.
             /* Manage ghost color */
-            if (this.ghostColor != 384){
+            if (this.ghostColor != 384){ //Enemy is still not the blue ghost.
                 this.oldghostColor = this.ghostColor; //store the old ghost number.
                 this.ghostColor = 384; //setting to the blue "blinking" ghost.
+                this.flash = 0; //change flash color to the "normal" blue ghost.
             }
-            else if (player.countdown < 150){ //start to blink
+            
+            if (player.countdown < 150){ //start to blink
                 if (player.countdown % 10 == 0){
                     if (this.flash == 0){
                         this.flash += 32;
                     }
-                    else{
+                    else if(this.flash == 32) {
                         this.flash = 0;
+                    }
+                    else {
+                        alert("blink error");
                     }
                 }
             }
         }
     }
     else if(player.countdown > 0 && this.ghostColor == 384){ //powerup still active and enemy was defeated
+        console.log("Enemy was defeated");
         this.flash = 64;
     }
     else if (this.ghostColor == 384){ //enemy scapes
         this.ghostColor = this.oldghostColor;
     }
-    this.updateCenter();
+    this.move();
 }
 
 var enemy1 = { //Enemy object. (red ghost)
@@ -247,7 +310,7 @@ var enemy1 = { //Enemy object. (red ghost)
     flash: 0, //Allow enemy flash when powerdot is hit by the player.
     defeat: false, //verify whether player can defeat enemy or not. True - player can defeat. False - Player can't defeat.
     updateCenter: e_updateCenter, //update collision center
-    move: e_move, //Enemy movement
+    move: new_e_move, //Enemy movement
     draw: e_draw, //draw enemy sprite
     update: new_e_update, //update enemy properties.
     canvasControl: canvasTurn
@@ -463,16 +526,14 @@ function render() {
     context.fillStyle = "black";
     context.fillRect(0, 0, canvas.width, canvas.height);
 
-    /* Update elements */
-    powerdot.update();
-    enemy1.update();
-    player.update();
-
     /* Collision detection */
     //Collision between dot and player
     if(collision(powerdot, player)){
         powerPillTime(); //Do actions related to collision between player and powerdot.
     }
+    powerdot.update();//update powerdot after possible collision.
+    powerdot.draw(); //draw powerdot after possible collision.
+    
     //Collision between player and ghost
     if (collision(player, enemy1)) {
         if (player.countdown>0) {//power pill was activated 
@@ -481,7 +542,6 @@ function render() {
                 //destroy or move enemy instance
                 ghostcolor.red = false;
                 enemy1.defeat = false;
-                enemy1.update();
                 //add score points
                 score++;    
             } 
@@ -492,12 +552,15 @@ function render() {
             //change player position
             player.x = myNumber(canvas.width - 100) + 50; 
             player.y = myNumber(canvas.height - 100) + 50;
-            player.update();
         }
     }
     
+    /* Update elements player and enemies */
+    enemy1.update();
+    player.update();
+    
     /* Drawing elements */
-    powerdot.draw();
+    
     enemy1.draw();
     player.draw();
 
