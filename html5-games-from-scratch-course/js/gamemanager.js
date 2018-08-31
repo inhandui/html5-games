@@ -4,6 +4,7 @@ var context; //Used to create context elements.
 var spriteSheet; //Used to store the game sprite sheet.
 var score; //Used to store the pacman scores.
 var gscore; //Used to store the ghosts scores.
+var tick;
 
 /* General Helper functions */
 function canvasTurn(){
@@ -214,6 +215,14 @@ function new_e_update(){ //new function to update enemy properties.
     else if (this.ghostColor == 384){ //enemy scapes
         this.ghostColor = this.oldghostColor;
     }
+    if (tick % 15 == 0){
+        if (this.bottom > this.ghostColor){
+            this.ghostColor += 32;
+        }
+        else {
+            this.ghostColor -= 32;
+        }
+    }
     this.move();
 }
 
@@ -243,9 +252,9 @@ var enemy1 = { //Enemy object. (red ghost)
     centery: 0, //Sprite center. Used to calculate collision detection.
     collisionsize: 12, //Size used to calculate collision area corners.
     moving: 0, //Current moving points.
-    headdirection: 0, //Current head (eyes) direction.
     direction_x: 0, //X movement direction on canvas.
     direction_y: 0, //Y movement direction on canvas.
+    bottom: (0*64)+32,
     ghostColor: 0 * 64,//Ghost colors based on numbers. (red color ghost)
     oldghostColor: 0, //old ghostColor value.
     flash: 0, //Allow enemy flash when powerdot is hit by the player.
@@ -266,9 +275,9 @@ var enemy2 = { //Enemy object. (Orange ghost)
     centery: 0, //Sprite center. Used to calculate collision detection.
     collisionsize: 12, //Size used to calculate collision area corners.
     moving: 0, //Current moving points.
-    headdirection: 0, //Current head (eyes) direction.
     direction_x: 0, //X movement direction on canvas.
     direction_y: 0, //Y movement direction on canvas.
+    bottom: (1*64)+32,
     ghostColor: 1 * 64,//Ghost colors based on numbers. (Orange ghost)
     oldghostColor: 0, //old ghostColor value.
     flash: 0, //Allow enemy flash when powerdot is hit by the player.
@@ -289,9 +298,9 @@ var enemy3 = { //Enemy object. (Pink ghost)
     centery: 0, //Sprite center. Used to calculate collision detection.
     collisionsize: 12, //Size used to calculate collision area corners.
     moving: 0, //Current moving points.
-    headdirection: 0, //Current head (eyes) direction.
     direction_x: 0, //X movement direction on canvas.
     direction_y: 0, //Y movement direction on canvas.
+    bottom: (2*64)+32,
     ghostColor: 2 * 64,//Ghost colors based on numbers. (Pink ghost)
     oldghostColor: 0, //old ghostColor value.
     flash: 0, //Allow enemy flash when powerdot is hit by the player.
@@ -312,9 +321,9 @@ var enemy4 = { //Enemy object. (Green ghost)
     centery: 0, //Sprite center. Used to calculate collision detection.
     collisionsize: 12, //Size used to calculate collision area corners.
     moving: 0, //Current moving points.
-    headdirection: 0, //Current head (eyes) direction.
     direction_x: 0, //X movement direction on canvas.
     direction_y: 0, //Y movement direction on canvas.
+    bottom: (3*64)+32,
     ghostColor: 3 * 64,//Ghost colors based on numbers. (Green ghost)
     oldghostColor: 0, //old ghostColor value.
     flash: 0, //Allow enemy flash when powerdot is hit by the player.
@@ -335,9 +344,9 @@ var enemy5 = { //Enemy object. (Purple ghost)
     centery: 0, //Sprite center. Used to calculate collision detection.
     collisionsize: 12, //Size used to calculate collision area corners.
     moving: 0, //Current moving points.
-    headdirection: 0, //Current head (eyes) direction.
     direction_x: 0, //X movement direction on canvas.
     direction_y: 0, //Y movement direction on canvas.
+    bottom: (4*64)+32,
     ghostColor: 4 * 64,//Ghost colors based on numbers. (Purple ghost)
     oldghostColor: 0, //old ghostColor value.
     flash: 0, //Allow enemy flash when powerdot is hit by the player.
@@ -554,6 +563,10 @@ function powerPillTime(){
     This function rendering in order. It is work like layers. 
     First element - botton layer. Last element - top layer. */
 function render() {
+    if (tick >= 500){
+        tick = 0;
+    }
+    tick++;
     /* Crdefeating canvas background and size */
     context.fillStyle = "black";
     context.fillRect(0, 0, canvas.width, canvas.height);
@@ -711,6 +724,7 @@ function setup() {
     /* Set game score */
     score = 0;
     gscore = 0;
+    tick = 0;
     
     /* Settingup all ghosts colors */
     /* Checking whether ghosts was not instantiate */
