@@ -213,17 +213,16 @@ function new_e_update(){ //new function to update enemy properties.
                     }
                     else {
                         console.log("Blink error");
+                        this.flash = 0;
                     }
                 }
             }
         }
     }
     else if(this.flash != 64 && player.countdown > 0 && (this.ghostColor == 384 || this.ghostColor == 416)){ //powerup still active and enemy was defeated
-        console.log("Enemy defeated");
         this.flash = 64;
     }
     else if (player.countdown <= 0 && (this.ghostColor == 384 || this.ghostColor == 416)){ //enemy scapes
-        console.log("Return to normal");
         this.ghostColor = this.oldghostColor;
         this.bottom = this.ghostColor + 32;
     }
