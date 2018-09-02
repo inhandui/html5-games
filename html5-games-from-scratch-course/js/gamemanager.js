@@ -272,7 +272,7 @@ var enemy1 = { //Enemy object. (red ghost)
     moving: 0, //Current moving points.
     direction_x: 0, //X movement direction on canvas.
     direction_y: 0, //Y movement direction on canvas.
-    bottom: ((0*64)+32),
+    bottom: ((0*64)+32), //Used to switch ghost bottom sprites animation.
     ghostColor: (0 * 64),//Ghost colors based on numbers. (red color ghost)
     oldghostColor: 0, //old ghostColor value.
     flash: 0, //Allow enemy flash when powerdot is hit by the player.
@@ -296,7 +296,7 @@ var enemy2 = { //Enemy object. (Orange ghost)
     moving: 0, //Current moving points.
     direction_x: 0, //X movement direction on canvas.
     direction_y: 0, //Y movement direction on canvas.
-    bottom: ((1*64)+32),
+    bottom: ((1*64)+32),//Used to switch ghost bottom sprites animation.
     ghostColor: (1 * 64),//Ghost colors based on numbers. (Orange ghost)
     oldghostColor: 0, //old ghostColor value.
     flash: 0, //Allow enemy flash when powerdot is hit by the player.
@@ -320,7 +320,7 @@ var enemy3 = { //Enemy object. (Pink ghost)
     moving: 0, //Current moving points.
     direction_x: 0, //X movement direction on canvas.
     direction_y: 0, //Y movement direction on canvas.
-    bottom: ((2*64)+32),
+    bottom: ((2*64)+32),//Used to switch ghost bottom sprites animation.
     ghostColor: (2 * 64),//Ghost colors based on numbers. (Pink ghost)
     oldghostColor: 0, //old ghostColor value.
     flash: 0, //Allow enemy flash when powerdot is hit by the player.
@@ -344,7 +344,7 @@ var enemy4 = { //Enemy object. (Green ghost)
     moving: 0, //Current moving points.
     direction_x: 0, //X movement direction on canvas.
     direction_y: 0, //Y movement direction on canvas.
-    bottom: ((3*64)+32),
+    bottom: ((3*64)+32),//Used to switch ghost bottom sprites animation.
     ghostColor: (3 * 64),//Ghost colors based on numbers. (Green ghost)
     oldghostColor: 0, //old ghostColor value.
     flash: 0, //Allow enemy flash when powerdot is hit by the player.
@@ -368,7 +368,7 @@ var enemy5 = { //Enemy object. (Purple ghost)
     moving: 0, //Current moving points.
     direction_x: 0, //X movement direction on canvas.
     direction_y: 0, //Y movement direction on canvas.
-    bottom: ((4*64)+32),
+    bottom: ((4*64)+32),//Used to switch ghost bottom sprites animation.
     ghostColor: (4 * 64),//Ghost colors based on numbers. (Purple ghost)
     oldghostColor: 0, //old ghostColor value.
     flash: 0, //Allow enemy flash when powerdot is hit by the player.
