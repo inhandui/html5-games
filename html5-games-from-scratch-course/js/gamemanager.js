@@ -130,7 +130,7 @@ function new_e_move(){ //calculates enemy (ghost) movement
         this.direction_x = 0; 
         this.direction_y = 0;
         
-        if (this.defeat || this.ghostColor == 384) {//Enemy can be defeated or already defeated.
+        if (this.defeat || this.ghostColor == 384 || this.ghostColor == 416) {//Enemy can be defeated or already defeated.
             this.speed = this.speed * (-1);//change velocity to enemy run away from player.
             //Even number change X direction and odd change Y direction. 
             if (this.moving % 2) {
@@ -187,9 +187,10 @@ function new_e_update(){ //new function to update enemy properties.
     if (this.defeat){ //Enemy can be defeated
         if (player.countdown > 0){ //powerpill is still active.
             /* Manage ghost color */
-            if (this.ghostColor != 384){ //Enemy is still not the blue ghost.
+            if (this.ghostColor != 384 && this.ghostColor != 416){ //Enemy is still not the blue ghost.
                 this.oldghostColor = this.ghostColor; //store the old ghost number.
                 this.ghostColor = 384; //setting to the blue "blinking" ghost.
+                this.bottom = this.ghostColor + 32; //Change bottom for the blue ghost bottom.
                 this.flash = 0; //change flash color to the "normal" blue ghost.
             }
             
@@ -208,13 +209,14 @@ function new_e_update(){ //new function to update enemy properties.
             }
         }
     }
-    else if(player.countdown > 0 && this.ghostColor == 384){ //powerup still active and enemy was defeated
-        console.log("Enemy was defeated");
+    else if(player.countdown > 0 && (this.ghostColor == 384 || this.ghostColor == 416)){ //powerup still active and enemy was defeated
         this.flash = 64;
     }
-    else if (this.ghostColor == 384){ //enemy scapes
+    else if (this.ghostColor == 384 || this.ghostColor == 416){ //enemy scapes
         this.ghostColor = this.oldghostColor;
+        this.bottom = this.ghostColor + 32;
     }
+
     if (tick % 15 == 0){
         if (this.bottom > this.ghostColor){
             this.ghostColor += 32;
@@ -223,6 +225,7 @@ function new_e_update(){ //new function to update enemy properties.
             this.ghostColor -= 32;
         }
     }
+    
     this.move();
 }
 
