@@ -95,6 +95,11 @@ function p_move() { //function to do player movement
     }
 }
 
+function p_spaw(){
+    this.x = 50;
+    this.y = 100;
+}
+
 var player = { //Player object.
     x: 50, //X position on the canvas.
     y: 100, //Y position on the canvas.
@@ -111,7 +116,8 @@ var player = { //Player object.
     draw: p_draw,
     update: p_update,
     move: p_move,
-    canvasControl: canvasTurn
+    canvasControl: canvasTurn,
+    spawn: p_spaw
 };
 
 /* Helper functions - Enemy sector */
@@ -229,6 +235,11 @@ function new_e_update(){ //new function to update enemy properties.
     this.move();
 }
 
+function e_spawn(){
+    this.x = myNumber(canvas.width - 100) + 50; //Avoiding spawn enemy on the canvas corners.
+    this.y = myNumber(canvas.height - 100) + 50; //Avoiding spawn enemy on the canvas corners.
+}
+
 function defeatAll(){
     enemy1.defeat = true;
     enemy2.defeat = true;
@@ -257,8 +268,8 @@ var enemy1 = { //Enemy object. (red ghost)
     moving: 0, //Current moving points.
     direction_x: 0, //X movement direction on canvas.
     direction_y: 0, //Y movement direction on canvas.
-    bottom: (0*64)+32,
-    ghostColor: 0 * 64,//Ghost colors based on numbers. (red color ghost)
+    bottom: ((0*64)+32),
+    ghostColor: (0 * 64),//Ghost colors based on numbers. (red color ghost)
     oldghostColor: 0, //old ghostColor value.
     flash: 0, //Allow enemy flash when powerdot is hit by the player.
     defeat: false, //verify whether player can defeat enemy or not. True - player can defeat. False - Player can't defeat.
@@ -266,7 +277,8 @@ var enemy1 = { //Enemy object. (red ghost)
     move: new_e_move, //Enemy movement
     draw: e_draw, //draw enemy sprite
     update: new_e_update, //update enemy properties.
-    canvasControl: canvasTurn
+    canvasControl: canvasTurn,
+    spawn: e_spawn 
 };
 var enemy2 = { //Enemy object. (Orange ghost)
     x: 150, //X position on the canvas.
@@ -280,8 +292,8 @@ var enemy2 = { //Enemy object. (Orange ghost)
     moving: 0, //Current moving points.
     direction_x: 0, //X movement direction on canvas.
     direction_y: 0, //Y movement direction on canvas.
-    bottom: (1*64)+32,
-    ghostColor: 1 * 64,//Ghost colors based on numbers. (Orange ghost)
+    bottom: ((1*64)+32),
+    ghostColor: (1 * 64),//Ghost colors based on numbers. (Orange ghost)
     oldghostColor: 0, //old ghostColor value.
     flash: 0, //Allow enemy flash when powerdot is hit by the player.
     defeat: false, //verify whether player can defeat enemy or not. True - player can defeat. False - Player can't defeat.
@@ -289,7 +301,8 @@ var enemy2 = { //Enemy object. (Orange ghost)
     move: new_e_move, //Enemy movement
     draw: e_draw, //draw enemy sprite
     update: new_e_update, //update enemy properties.
-    canvasControl: canvasTurn
+    canvasControl: canvasTurn,
+    spawn: e_spawn
 };
 var enemy3 = { //Enemy object. (Pink ghost)
     x: 150, //X position on the canvas.
@@ -303,8 +316,8 @@ var enemy3 = { //Enemy object. (Pink ghost)
     moving: 0, //Current moving points.
     direction_x: 0, //X movement direction on canvas.
     direction_y: 0, //Y movement direction on canvas.
-    bottom: (2*64)+32,
-    ghostColor: 2 * 64,//Ghost colors based on numbers. (Pink ghost)
+    bottom: ((2*64)+32),
+    ghostColor: (2 * 64),//Ghost colors based on numbers. (Pink ghost)
     oldghostColor: 0, //old ghostColor value.
     flash: 0, //Allow enemy flash when powerdot is hit by the player.
     defeat: false, //verify whether player can defeat enemy or not. True - player can defeat. False - Player can't defeat.
@@ -312,7 +325,8 @@ var enemy3 = { //Enemy object. (Pink ghost)
     move: new_e_move, //Enemy movement
     draw: e_draw, //draw enemy sprite
     update: new_e_update, //update enemy properties.
-    canvasControl: canvasTurn
+    canvasControl: canvasTurn,
+    spawn: e_spawn
 };
 var enemy4 = { //Enemy object. (Green ghost)
     x: 150, //X position on the canvas.
@@ -326,8 +340,8 @@ var enemy4 = { //Enemy object. (Green ghost)
     moving: 0, //Current moving points.
     direction_x: 0, //X movement direction on canvas.
     direction_y: 0, //Y movement direction on canvas.
-    bottom: (3*64)+32,
-    ghostColor: 3 * 64,//Ghost colors based on numbers. (Green ghost)
+    bottom: ((3*64)+32),
+    ghostColor: (3 * 64),//Ghost colors based on numbers. (Green ghost)
     oldghostColor: 0, //old ghostColor value.
     flash: 0, //Allow enemy flash when powerdot is hit by the player.
     defeat: false, //verify whether player can defeat enemy or not. True - player can defeat. False - Player can't defeat.
@@ -335,7 +349,8 @@ var enemy4 = { //Enemy object. (Green ghost)
     move: new_e_move, //Enemy movement
     draw: e_draw, //draw enemy sprite
     update: new_e_update, //update enemy properties.
-    canvasControl: canvasTurn
+    canvasControl: canvasTurn,
+    spawn: e_spawn
 };
 var enemy5 = { //Enemy object. (Purple ghost)
     x: 150, //X position on the canvas.
@@ -349,8 +364,8 @@ var enemy5 = { //Enemy object. (Purple ghost)
     moving: 0, //Current moving points.
     direction_x: 0, //X movement direction on canvas.
     direction_y: 0, //Y movement direction on canvas.
-    bottom: (4*64)+32,
-    ghostColor: 4 * 64,//Ghost colors based on numbers. (Purple ghost)
+    bottom: ((4*64)+32),
+    ghostColor: (4 * 64),//Ghost colors based on numbers. (Purple ghost)
     oldghostColor: 0, //old ghostColor value.
     flash: 0, //Allow enemy flash when powerdot is hit by the player.
     defeat: false, //verify whether player can defeat enemy or not. True - player can defeat. False - Player can't defeat.
@@ -358,7 +373,8 @@ var enemy5 = { //Enemy object. (Purple ghost)
     move: new_e_move, //Enemy movement
     draw: e_draw, //draw enemy sprite
     update: new_e_update, //update enemy properties.
-    canvasControl: canvasTurn
+    canvasControl: canvasTurn,
+    spawn: e_spawn
 };
 
 /* Helper functions - Powerdot sector */
@@ -729,37 +745,6 @@ function setup() {
     gscore = 0;
     tick = 0;
     
-    /* Settingup all ghosts colors */
-    /* Checking whether ghosts was not instantiate */
-    if (this.ghostColor == (0*64)){ //red ghost start up 
-        this.x = myNumber(canvas.width - 100) + 50; //Avoiding spawn enemy on the canvas corners.
-        this.y = myNumber(canvas.height - 100) + 50; //Avoiding spawn enemy on the canvas corners.
-    }
-    else if (this.ghostColor == (1*64)){ //orange ghost start up
-        this.x = myNumber(canvas.width - 100) + 50; //Avoiding spawn enemy on the canvas corners.
-        this.y = myNumber(canvas.height - 100) + 50; //Avoiding spawn enemy on the canvas corners.
-    }
-    else if (this.ghostColor == (2*64)){ //pink ghost start up
-        this.x = myNumber(canvas.width - 100) + 50; //Avoiding spawn enemy on the canvas corners.
-        this.y = myNumber(canvas.height - 100) + 50; //Avoiding spawn enemy on the canvas corners.
-    }
-    else if (this.ghostColor == (3*64)){ //green ghost start up
-        this.x = myNumber(canvas.width - 100) + 50; //Avoiding spawn enemy on the canvas corners.
-        this.y = myNumber(canvas.height - 100) + 50; //Avoiding spawn enemy on the canvas corners.
-    }
-    else if (this.ghostColor == (4*64)){ //purple ghost start up
-        this.x = myNumber(canvas.width - 100) + 50; //Avoiding spawn enemy on the canvas corners.
-        this.y = myNumber(canvas.height - 100) + 50; //Avoiding spawn enemy on the canvas corners.
-    }
-
-    /* setting up center */
-    player.updateCenter(); //player center
-    enemy1.updateCenter(); //enemy center
-    enemy2.updateCenter(); //enemy center
-    enemy3.updateCenter(); //enemy center
-    enemy4.updateCenter(); //enemy center
-    enemy5.updateCenter(); //enemy center
-
     /* creating the canvas */
     canvas = document.createElement("canvas");
     context = canvas.getContext('2d');
@@ -772,4 +757,20 @@ function setup() {
 
     /* Append canvas to document body element */
     document.body.appendChild(canvas);
+    
+    /* Setting up player and all ghosts colors */
+    player.spawn();
+    enemy1.spawn();
+    enemy2.spawn();
+    enemy3.spawn();
+    enemy4.spawn();
+    enemy5.spawn();
+
+    /* setting up center */
+    player.updateCenter(); //player center
+    enemy1.updateCenter(); //enemy center
+    enemy2.updateCenter(); //enemy center
+    enemy3.updateCenter(); //enemy center
+    enemy4.updateCenter(); //enemy center
+    enemy5.updateCenter(); //enemy center
 }
