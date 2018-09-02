@@ -194,6 +194,9 @@ function new_e_update(){ //new function to update enemy properties.
         if (player.countdown > 0){ //powerpill is still active.
             /* Manage ghost color */
             if (this.ghostColor != 384 && this.ghostColor != 416){ //Enemy is still not the blue ghost.
+                if(this.ghostColor == this.bottom){
+                    this.ghostColor -= 32;
+                }
                 this.oldghostColor = this.ghostColor; //store the old ghost number.
                 this.ghostColor = 384; //setting to the blue "blinking" ghost.
                 this.bottom = this.ghostColor + 32; //Change bottom for the blue ghost bottom.
@@ -215,10 +218,12 @@ function new_e_update(){ //new function to update enemy properties.
             }
         }
     }
-    else if(player.countdown > 0 && (this.ghostColor == 384 || this.ghostColor == 416)){ //powerup still active and enemy was defeated
+    else if(this.flash != 64 && player.countdown > 0 && (this.ghostColor == 384 || this.ghostColor == 416)){ //powerup still active and enemy was defeated
+        console.log("Enemy defeated");
         this.flash = 64;
     }
-    else if (this.ghostColor == 384 || this.ghostColor == 416){ //enemy scapes
+    else if (player.countdown <= 0 && (this.ghostColor == 384 || this.ghostColor == 416)){ //enemy scapes
+        console.log("Return to normal");
         this.ghostColor = this.oldghostColor;
         this.bottom = this.ghostColor + 32;
     }
