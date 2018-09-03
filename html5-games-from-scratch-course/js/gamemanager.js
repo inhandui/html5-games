@@ -219,8 +219,8 @@ function new_e_update(){ //new function to update enemy properties.
             }
         }
     }
-    else if(this.flash != 64 && player.countdown > 0 && (this.ghostColor == 384 || this.ghostColor == 416)){ //powerup still active and enemy was defeated
-        this.flash = 64;
+    else if(this.flash != 64 && player.countdown > 0 && (this.ghostColor == 384 || this.ghostColor == 416)){
+        this.flash = 64; //powerup still active and enemy was defeated. So now ghost is set to "only eyes".
     }
     else if (player.countdown <= 0 && (this.ghostColor == 384 || this.ghostColor == 416)){ //enemy scapes
         this.ghostColor = this.oldghostColor;
