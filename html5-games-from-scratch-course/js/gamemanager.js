@@ -13,6 +13,7 @@ var colors = [
     'green',
     'purple',
 ];
+var walls = []; //walls array
 
 /* General Helper functions */
 function canvasTurn(){
@@ -29,6 +30,14 @@ function canvasTurn(){
     if (this.y < 0) { //transporting enemy from the up side of canvas to botton side.
         this.y = canvas.height - this.height;
     }
+}
+
+function UpdateCAll (element) { //update center of all objects
+    element.updateCenter();
+}
+
+function drawAll (element) {//draw all objects
+    element.draw();
 }
 
 /* Helper functions - Player sector */
@@ -262,16 +271,6 @@ function unDefeatAll(element){ //change defeat status to false in all enemies
     element.defeat = false;
 }
 
-
-function UpdateCAll (element) { //update center of all enemies
-    element.updateCenter();
-}
-
-function drawAll (element) {//draw all enemies
-    element.draw();
-}
-
-
 function collisionAll (element) {//verify collision between enemies and player.
     if (collision(player, element)) {
         if (player.countdown>0) {//power pill was activated 
@@ -369,6 +368,68 @@ var powerdot = { //Powerdot object.
     draw: pd_draw,
     update: pd_update
 };
+
+/* Helper functions - wall section */
+function d_draw () {//draw a wall in canvas.
+    /*  drawing lines */
+    context.beginPath();
+    context.moveTo(this.startx, this.starty);
+    context.lineTo(this.endx, this.endy);
+    context.strokeStyle = "white";
+    context.stroke();
+    
+    
+//    context.lineTo(400, 300);
+//    context.strokeStyle = "red";
+//    context.stroke();
+}
+
+function w_update () {//update wall's variables 
+    //TODO- when will make walls movement to reducing canvas size and make game more dificult
+}
+
+function makeWalls () {//Creating walls objects and adding to an array of walls.
+    var sideWallpadding = 10; //adding padding in walls and canvas
+    /* canvas coordinates objects*/
+    var upLeftCorner = {
+        x: 0+sideWallpadding,
+        y: 0+sideWallpadding
+    };
+    var bottomLeftCorner = {
+        x: 0+sideWallpadding,
+        y: canvas.height -sideWallpadding
+    };
+    var upRightCorner = {
+        x: canvas.width - sideWallpadding,
+        y: 0+sideWallpadding
+    };
+    var bottomRightCorner = {
+        x: canvas.width - sideWallpadding,
+        y: canvas.height - sideWallpadding
+    };
+    /* Creating walls that limit the canvas */
+    walls.push(new Wall(upLeftCorner.x, upLeftCorner.y, bottomLeftCorner.x, bottomLeftCorner.y));//left side.
+    
+    walls.push(new Wall(upRightCorner.x, upRightCorner.y, bottomRightCorner.x, bottomRightCorner.y ));//right side.
+    
+    walls.push(new Wall(bottomLeftCorner.x, bottomLeftCorner.y, bottomRightCorner.x, bottomRightCorner.y));//bottom side.
+    
+    walls.push(new Wall(upLeftCorner.x, upLeftCorner.y, upRightCorner.x, upRightCorner.y)); //up side.
+}
+
+/* 
+    Wall contructor
+*/
+function Wall(startx, starty, endx, endy){
+    /* Variables */
+    this.startx = startx; //start x ponint of the wall in the canvas.
+    this.starty = starty; //start y ponint of the wall in the canvas.
+    this.endx = endx; //end x ponint of the wall in the canvas.
+    this.endy = endy; //end x ponint of the wall in the canvas.
+    /* Functions */
+    this.draw = d_draw; //draw a wall in canvas.
+    this.update = w_update; //update wall's variables.
+}
 
 /* Keyboard events object */
 var keyEvent = {}; //Used to capture key events and store to an array.
@@ -541,8 +602,13 @@ function render() {
     /* Crdefeating canvas background and size */
     context.fillStyle = "black";
     context.fillRect(0, 0, canvas.width, canvas.height);
+    
 
     /* Collision detection */
+    
+    //Collision between wall and player(and update player)
+    //Collision between wall and enemies(and update enemies)
+    
     //Collision between dot and player
     if(collision(powerdot, player)){
         powerPillTime(); //Do actions related to collision between player and powerdot.
@@ -551,13 +617,16 @@ function render() {
     powerdot.draw(); //draw powerdot after possible collision.
     
     //Collision between player and ghost
-    enemies.forEach(collisionAll);
+    enemies.forEach(collisionAll); //collision and update enemies 
     
+    
+    /* Update elements */
     player.update();
     
     /* Drawing elements */
     player.draw();
     enemies.forEach(drawAll);
+    walls.forEach(drawAll);
     
     /* Drawing basic Heads Up Display */
     context.font = "20px Verdana";
@@ -602,6 +671,9 @@ function setup() {
     for (var i=0; i<=4; i++){
         enemies.push(new Enemy(colors[i],((i*64)+32), (i * 64)));
     }
+    
+    /* Creating walls */
+    makeWalls();
     
     /* Setting up player and all ghosts colors */
     player.spawn();
