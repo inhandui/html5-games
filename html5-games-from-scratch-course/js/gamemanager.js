@@ -5,6 +5,14 @@ var spriteSheet; //Used to store the game sprite sheet.
 var score; //Used to store the pacman scores.
 var gscore; //Used to store the ghosts scores.
 var tick;
+var enemies = [];
+var colors = [
+    'red',
+    'orange',
+    'pink',
+    'green',
+    'purple',
+];
 
 /* General Helper functions */
 function canvasTurn(){
@@ -95,7 +103,7 @@ function p_move() { //function to do player movement
     }
 }
 
-function p_spaw(){
+function p_spaw(){ //function to control player spaw.
     this.x = 50;
     this.y = 100;
 }
@@ -244,142 +252,85 @@ function e_spawn(){
     this.y = myNumber(canvas.height - 100) + 50; //Avoiding spawn enemy on the canvas corners.
 }
 
-function defeatAll(){
-    enemy1.defeat = true;
-    enemy2.defeat = true;
-    enemy3.defeat = true;
-    enemy4.defeat = true;
-    enemy5.defeat = true;
+function defeatAll(element, index, array){
+    element.defeat = true;
 }
 
-function unDefeatAll(){
-    enemy1.defeat = false;
-    enemy2.defeat = false;
-    enemy3.defeat = false;
-    enemy4.defeat = false;
-    enemy5.defeat = false;
+function unDefeatAll(element, index, array){
+    element.defeat = false;
 }
 
-var enemy1 = { //Enemy object. (red ghost)
-    x: 150, //X position on the canvas.
-    y: 200, //Y position on the canvas.
-    width: 32, //sprite width after draw.
-    height: 32, //Sprite height after draw.
-    speed: 5, //Current speed.
-    centerx: 0, //Sprite center. Used to calculate collision detection. 
-    centery: 0, //Sprite center. Used to calculate collision detection.
-    collisionsize: 12, //Size used to calculate collision area corners.
-    moving: 0, //Current moving points.
-    direction_x: 0, //X movement direction on canvas.
-    direction_y: 0, //Y movement direction on canvas.
-    bottom: ((0*64)+32), //Used to switch ghost bottom sprites animation.
-    ghostColor: (0 * 64),//Ghost colors based on numbers. (red color ghost)
-    oldghostColor: 0, //old ghostColor value.
-    flash: 0, //Allow enemy flash when powerdot is hit by the player.
-    defeat: false, //verify whether player can defeat enemy or not. True - player can defeat. False - Player can't defeat.
-    updateCenter: e_updateCenter, //update collision center
-    move: new_e_move, //Enemy movement
-    draw: e_draw, //draw enemy sprite
-    update: new_e_update, //update enemy properties.
-    canvasControl: canvasTurn,
-    spawn: e_spawn 
-};
-var enemy2 = { //Enemy object. (Orange ghost)
-    x: 150, //X position on the canvas.
-    y: 200, //Y position on the canvas.
-    width: 32, //sprite width after draw.
-    height: 32, //Sprite height after draw.
-    speed: 5, //Current speed.
-    centerx: 0, //Sprite center. Used to calculate collision detection. 
-    centery: 0, //Sprite center. Used to calculate collision detection.
-    collisionsize: 12, //Size used to calculate collision area corners.
-    moving: 0, //Current moving points.
-    direction_x: 0, //X movement direction on canvas.
-    direction_y: 0, //Y movement direction on canvas.
-    bottom: ((1*64)+32),//Used to switch ghost bottom sprites animation.
-    ghostColor: (1 * 64),//Ghost colors based on numbers. (Orange ghost)
-    oldghostColor: 0, //old ghostColor value.
-    flash: 0, //Allow enemy flash when powerdot is hit by the player.
-    defeat: false, //verify whether player can defeat enemy or not. True - player can defeat. False - Player can't defeat.
-    updateCenter: e_updateCenter, //update collision center
-    move: new_e_move, //Enemy movement
-    draw: e_draw, //draw enemy sprite
-    update: new_e_update, //update enemy properties.
-    canvasControl: canvasTurn,
-    spawn: e_spawn
-};
-var enemy3 = { //Enemy object. (Pink ghost)
-    x: 150, //X position on the canvas.
-    y: 200, //Y position on the canvas.
-    width: 32, //sprite width after draw.
-    height: 32, //Sprite height after draw.
-    speed: 5, //Current speed.
-    centerx: 0, //Sprite center. Used to calculate collision detection. 
-    centery: 0, //Sprite center. Used to calculate collision detection.
-    collisionsize: 12, //Size used to calculate collision area corners.
-    moving: 0, //Current moving points.
-    direction_x: 0, //X movement direction on canvas.
-    direction_y: 0, //Y movement direction on canvas.
-    bottom: ((2*64)+32),//Used to switch ghost bottom sprites animation.
-    ghostColor: (2 * 64),//Ghost colors based on numbers. (Pink ghost)
-    oldghostColor: 0, //old ghostColor value.
-    flash: 0, //Allow enemy flash when powerdot is hit by the player.
-    defeat: false, //verify whether player can defeat enemy or not. True - player can defeat. False - Player can't defeat.
-    updateCenter: e_updateCenter, //update collision center
-    move: new_e_move, //Enemy movement
-    draw: e_draw, //draw enemy sprite
-    update: new_e_update, //update enemy properties.
-    canvasControl: canvasTurn,
-    spawn: e_spawn
-};
-var enemy4 = { //Enemy object. (Green ghost)
-    x: 150, //X position on the canvas.
-    y: 200, //Y position on the canvas.
-    width: 32, //sprite width after draw.
-    height: 32, //Sprite height after draw.
-    speed: 5, //Current speed.
-    centerx: 0, //Sprite center. Used to calculate collision detection. 
-    centery: 0, //Sprite center. Used to calculate collision detection.
-    collisionsize: 12, //Size used to calculate collision area corners.
-    moving: 0, //Current moving points.
-    direction_x: 0, //X movement direction on canvas.
-    direction_y: 0, //Y movement direction on canvas.
-    bottom: ((3*64)+32),//Used to switch ghost bottom sprites animation.
-    ghostColor: (3 * 64),//Ghost colors based on numbers. (Green ghost)
-    oldghostColor: 0, //old ghostColor value.
-    flash: 0, //Allow enemy flash when powerdot is hit by the player.
-    defeat: false, //verify whether player can defeat enemy or not. True - player can defeat. False - Player can't defeat.
-    updateCenter: e_updateCenter, //update collision center
-    move: new_e_move, //Enemy movement
-    draw: e_draw, //draw enemy sprite
-    update: new_e_update, //update enemy properties.
-    canvasControl: canvasTurn,
-    spawn: e_spawn
-};
-var enemy5 = { //Enemy object. (Purple ghost)
-    x: 150, //X position on the canvas.
-    y: 200, //Y position on the canvas.
-    width: 32, //sprite width after draw.
-    height: 32, //Sprite height after draw.
-    speed: 5, //Current speed.
-    centerx: 0, //Sprite center. Used to calculate collision detection. 
-    centery: 0, //Sprite center. Used to calculate collision detection.
-    collisionsize: 12, //Size used to calculate collision area corners.
-    moving: 0, //Current moving points.
-    direction_x: 0, //X movement direction on canvas.
-    direction_y: 0, //Y movement direction on canvas.
-    bottom: ((4*64)+32),//Used to switch ghost bottom sprites animation.
-    ghostColor: (4 * 64),//Ghost colors based on numbers. (Purple ghost)
-    oldghostColor: 0, //old ghostColor value.
-    flash: 0, //Allow enemy flash when powerdot is hit by the player.
-    defeat: false, //verify whether player can defeat enemy or not. True - player can defeat. False - Player can't defeat.
-    updateCenter: e_updateCenter, //update collision center
-    move: new_e_move, //Enemy movement
-    draw: e_draw, //draw enemy sprite
-    update: new_e_update, //update enemy properties.
-    canvasControl: canvasTurn,
-    spawn: e_spawn
-};
+
+function UpdateCAll (element, index, array) {
+    element.updateCenter();
+}
+
+
+function UpdateAll (element, index, array) {
+    element.update();
+}
+
+
+function drawAll (element, index, array) {
+    element.draw();
+}
+
+
+function collisionAll (element, index, array) {
+    if (collision(player, element)) {
+        if (player.countdown>0) {//power pill was activated 
+            /* enemy can be defeated or enemy are "only eyes" because enemy is already defeated */
+            if (element.defeat){ //enemy can be defeated so destroy him, otherwise do nothing
+                //destroy or move enemy instance
+                element.defeat = false;
+                //add score points
+                score++;    
+                console.log("player defeat " + element.ghostName + " ghost");
+            } 
+        }
+        else {//player "die"
+            //add ghost score points
+            gscore++;
+            //alert("You was eaten by the purple ghost");
+            //change player position
+            player.x = myNumber(canvas.width - 100) + 50; 
+            player.y = myNumber(canvas.height - 100) + 50;
+            console.log("Player was defeated by " + element.ghostName + " ghost");
+        }
+    }
+    element.update();
+}
+
+function spawnAll(element, index, array){
+    element.spawn();
+}
+
+function Enemy (ghostName, bottom, ghostColor) { //Enemy object. (red ghost)
+    this.ghostName = ghostName;
+    this.x = -10; //X position on the canvas.
+    this.y = -100; //Y position on the canvas.
+    this.width = 32;//sprite width after draw.
+    this.height = 32; //Sprite height after draw.
+    this.speed = 5; //Current speed.
+    this.centerx = 0; //Sprite center. Used to calculate collision detection. 
+    this.centery = 0; //Sprite center. Used to calculate collision detection.
+    this.collisionsize = 12; //Size used to calculate collision area corners.
+    this.moving = 0; //Current moving points.
+    this.direction_x = 0; //X movement direction on canvas.
+    this.direction_y = 0; //Y movement direction on canvas.
+    this.bottom = bottom; //Used to switch ghost bottom sprites animation.
+    this.ghostColor = ghostColor;//Ghost colors based on numbers. (red color ghost)
+    this.oldghostColor = 0; //old ghostColor value.
+    this.flash= 0; //Allow enemy flash when powerdot is hit by the player.
+    this.defeat = false; //verify whether player can defeat enemy or not. True - player can defeat. False - Player can't defeat.
+    this.updateCenter = e_updateCenter; //update collision center
+    this.move = new_e_move; //Enemy movement
+    this.draw = e_draw; //draw enemy sprite
+    this.update = new_e_update; //update enemy properties.
+    this.canvasControl= canvasTurn;
+    this.spawn = e_spawn;
+}
+
 
 /* Helper functions - Powerdot sector */
 function pd_draw() { //function to draw a powerdot on canvas.
@@ -402,7 +353,7 @@ function pd_update(){ //function to update powerdot properties.
             /* change player velocity */
             player.speed = 3;
             //change emenies defeat state
-            unDefeatAll();
+            enemies.forEach(unDefeatAll);
             
         }
         else if (player.countdown<0 ) { //ensure consistent countdown value.
@@ -578,7 +529,7 @@ function powerPillTime(){
         /* Change player speed */
         player.speed = 4;
         /* Change all enemies defeat states */
-        defeatAll();
+        enemies.forEach(defeatAll);
     }
 }
 
@@ -603,126 +554,13 @@ function render() {
     powerdot.draw(); //draw powerdot after possible collision.
     
     //Collision between player and ghost
-    if (collision(player, enemy1)) {
-        if (player.countdown>0) {//power pill was activated 
-            /* enemy can be defeated or enemy are "only eyes" because enemy is already defeated */
-            if (enemy1.defeat){ //enemy can be defeated so destroy him, otherwise do nothing
-                //destroy or move enemy instance
-                enemy1.defeat = false;
-                //add score points
-                score++;    
-            } 
-        }
-        else {//player "die"
-            //add ghost score points
-            gscore++;
-            //alert("You was eaten by the purple ghost");
-            //change player position
-            player.x = myNumber(canvas.width - 100) + 50; 
-            player.y = myNumber(canvas.height - 100) + 50;
-        }
-    }
+    enemies.forEach(collisionAll);
     
-    /* Update elements player and enemies */
     player.update();
-    enemy1.update();
-    
-    //Collision between player and ghost
-    if (collision(player, enemy2)) {
-        if (player.countdown>0) {//power pill was activated 
-            /* enemy can be defeated or enemy are "only eyes" because enemy is already defeated */
-            if (enemy2.defeat){ //enemy can be defeated so destroy him, otherwise do nothing
-                //destroy or move enemy instance
-                enemy2.defeat = false;
-                //add score points
-                score++;    
-            } 
-        }
-        else {//player "die"
-            //add ghost score points
-            gscore++;
-            //alert("You was eaten by the purple ghost");
-            //change player position
-            player.x = myNumber(canvas.width - 100) + 50; 
-            player.y = myNumber(canvas.height - 100) + 50;
-        }
-    }
-    
-    enemy2.update();
-    
-    //Collision between player and ghost
-    if (collision(player, enemy3)) {
-        if (player.countdown>0) {//power pill was activated 
-            /* enemy can be defeated or enemy are "only eyes" because enemy is already defeated */
-            if (enemy3.defeat){ //enemy can be defeated so destroy him, otherwise do nothing
-                //destroy or move enemy instance
-                enemy3.defeat = false;
-                //add score points
-                score++;    
-            } 
-        }
-        else {//player "die"
-            //add ghost score points
-            gscore++;
-            //alert("You was eaten by the purple ghost");
-            //change player position
-            player.x = myNumber(canvas.width - 100) + 50; 
-            player.y = myNumber(canvas.height - 100) + 50;
-        }
-    }
-    enemy3.update();
-    
-    //Collision between player and ghost
-    if (collision(player, enemy4)) {
-        if (player.countdown>0) {//power pill was activated 
-            /* enemy can be defeated or enemy are "only eyes" because enemy is already defeated */
-            if (enemy4.defeat){ //enemy can be defeated so destroy him, otherwise do nothing
-                //destroy or move enemy instance
-                enemy4.defeat = false;
-                //add score points
-                score++;    
-            } 
-        }
-        else {//player "die"
-            //add ghost score points
-            gscore++;
-            //alert("You was eaten by the purple ghost");
-            //change player position
-            player.x = myNumber(canvas.width - 100) + 50; 
-            player.y = myNumber(canvas.height - 100) + 50;
-        }
-    }
-    enemy4.update();
-    
-    //Collision between player and ghost
-    if (collision(player, enemy5)) {
-        if (player.countdown>0) {//power pill was activated 
-            /* enemy can be defeated or enemy are "only eyes" because enemy is already defeated */
-            if (enemy5.defeat){ //enemy can be defeated so destroy him, otherwise do nothing
-                //destroy or move enemy instance
-                enemy5.defeat = false;
-                //add score points
-                score++;    
-            } 
-        }
-        else {//player "die"
-            //add ghost score points
-            gscore++;
-            //alert("You was eaten by the purple ghost");
-            //change player position
-            player.x = myNumber(canvas.width - 100) + 50; 
-            player.y = myNumber(canvas.height - 100) + 50;
-        }
-    }
-    enemy5.update();
     
     /* Drawing elements */
     player.draw();
-    enemy1.draw();
-    enemy2.draw();
-    enemy3.draw();
-    enemy4.draw();
-    enemy5.draw();
+    enemies.forEach(drawAll);
     
     /* Drawing basic Heads Up Display */
     context.font = "20px Verdana";
@@ -741,6 +579,7 @@ function checkReady() {
     this.ready = true;
     playGame();
 }
+
 
 /* Function to setup the Game Manager */
 function setup() {
@@ -762,19 +601,16 @@ function setup() {
     /* Append canvas to document body element */
     document.body.appendChild(canvas);
     
+    /* Creating enemies */
+    for (var i=0; i<=4; i++){
+        enemies.push(new Enemy(colors[i],((i*64)+32), (i * 64)));
+    }
+    
     /* Setting up player and all ghosts colors */
     player.spawn();
-    enemy1.spawn();
-    enemy2.spawn();
-    enemy3.spawn();
-    enemy4.spawn();
-    enemy5.spawn();
+    enemies.forEach(spawnAll);    
 
     /* setting up center */
     player.updateCenter(); //player center
-    enemy1.updateCenter(); //enemy center
-    enemy2.updateCenter(); //enemy center
-    enemy3.updateCenter(); //enemy center
-    enemy4.updateCenter(); //enemy center
-    enemy5.updateCenter(); //enemy center
+    enemies.forEach(UpdateCAll);
 }
