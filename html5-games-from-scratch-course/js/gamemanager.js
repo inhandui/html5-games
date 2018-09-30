@@ -252,31 +252,27 @@ function e_spawn(){
     this.y = myNumber(canvas.height - 100) + 50; //Avoiding spawn enemy on the canvas corners.
 }
 
-function defeatAll(element, index, array){
+
+/* ForEach functions */
+function defeatAll(element){//change defeat status to true in all enemies
     element.defeat = true;
 }
 
-function unDefeatAll(element, index, array){
+function unDefeatAll(element){ //change defeat status to false in all enemies
     element.defeat = false;
 }
 
 
-function UpdateCAll (element, index, array) {
+function UpdateCAll (element) { //update center of all enemies
     element.updateCenter();
 }
 
-
-function UpdateAll (element, index, array) {
-    element.update();
-}
-
-
-function drawAll (element, index, array) {
+function drawAll (element) {//draw all enemies
     element.draw();
 }
 
 
-function collisionAll (element, index, array) {
+function collisionAll (element) {//verify collision between enemies and player.
     if (collision(player, element)) {
         if (player.countdown>0) {//power pill was activated 
             /* enemy can be defeated or enemy are "only eyes" because enemy is already defeated */
@@ -285,27 +281,28 @@ function collisionAll (element, index, array) {
                 element.defeat = false;
                 //add score points
                 score++;    
+                //Adding defeat information
                 console.log("player defeat " + element.ghostName + " ghost");
             } 
         }
         else {//player "die"
             //add ghost score points
             gscore++;
-            //alert("You was eaten by the purple ghost");
             //change player position
             player.x = myNumber(canvas.width - 100) + 50; 
             player.y = myNumber(canvas.height - 100) + 50;
+            //Adding defeat information
             console.log("Player was defeated by " + element.ghostName + " ghost");
         }
     }
     element.update();
 }
 
-function spawnAll(element, index, array){
+function spawnAll(element){ //spawn enemies.
     element.spawn();
 }
 
-function Enemy (ghostName, bottom, ghostColor) { //Enemy object. (red ghost)
+function Enemy (ghostName, bottom, ghostColor) { //Enemy object constructor.
     this.ghostName = ghostName;
     this.x = -10; //X position on the canvas.
     this.y = -100; //Y position on the canvas.
@@ -327,7 +324,7 @@ function Enemy (ghostName, bottom, ghostColor) { //Enemy object. (red ghost)
     this.move = new_e_move; //Enemy movement
     this.draw = e_draw; //draw enemy sprite
     this.update = new_e_update; //update enemy properties.
-    this.canvasControl= canvasTurn;
+    this.canvasControl= canvasTurn; //turn enemy movement in canvas.
     this.spawn = e_spawn;
 }
 
