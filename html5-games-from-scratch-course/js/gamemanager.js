@@ -14,6 +14,24 @@ var colors = [
     'purple',
 ];
 var walls = []; //walls array
+var sideWallpadding = 10; //adding padding in walls. (Relative to canvas).
+/* canvas coordinates objects to make walls */
+var upLeftCorner = {
+    x: undefined,
+    y: undefined
+};
+var bottomLeftCorner = {
+    x: undefined,
+    y: undefined
+};
+var upRightCorner = {
+    x: undefined,
+    y: undefined
+};
+var bottomRightCorner = {
+    x: undefined,
+    y: undefined
+};
 
 /* General Helper functions */
 function canvasTurn(){
@@ -389,24 +407,6 @@ function w_update () {//update wall's variables
 }
 
 function makeWalls () {//Creating walls objects and adding to an array of walls.
-    var sideWallpadding = 10; //adding padding in walls and canvas
-    /* canvas coordinates objects*/
-    var upLeftCorner = {
-        x: 0+sideWallpadding,
-        y: 0+sideWallpadding
-    };
-    var bottomLeftCorner = {
-        x: 0+sideWallpadding,
-        y: canvas.height -sideWallpadding
-    };
-    var upRightCorner = {
-        x: canvas.width - sideWallpadding,
-        y: 0+sideWallpadding
-    };
-    var bottomRightCorner = {
-        x: canvas.width - sideWallpadding,
-        y: canvas.height - sideWallpadding
-    };
     /* Creating walls that limit the canvas */
     walls.push(new Wall(upLeftCorner.x, upLeftCorner.y, bottomLeftCorner.x, bottomLeftCorner.y));//left side.
     
@@ -415,6 +415,43 @@ function makeWalls () {//Creating walls objects and adding to an array of walls.
     walls.push(new Wall(bottomLeftCorner.x, bottomLeftCorner.y, bottomRightCorner.x, bottomRightCorner.y));//bottom side.
     
     walls.push(new Wall(upLeftCorner.x, upLeftCorner.y, upRightCorner.x, upRightCorner.y)); //up side.
+}
+
+/*  Calculate whether element is inside walls limits or outside limits. 
+    Return - Return TRUE if has a collision between object and walls otherwise FALSE. */
+function wallCollision(Object){
+    /* Setting up Object vertices */
+    var x1 = (Object.centerx - Object.collisionsize);
+    var y1 = (Object.centery - Object.collisionsize);
+    var x2 = (Object.centerx + Object.collisionsize);
+    var y2 = (Object.centery + Object.collisionsize);
+    /* 
+        x1   w1  w2   x2     
+        y1   z1
+        
+        y2   z2
+    */
+    
+    //Hit left wall
+    if (upLeftCorner.x >= x1 ) {
+        return true;
+    }
+    //Hit up wall
+    if (upLeftCorner.y >= y1) {
+        return true;
+    }
+    
+    //hit bottom wall
+    if (bottomLeftCorner.y <= y2){
+        return true;
+    }
+    
+    //Hit right wall
+    if (upRightCorner.x <= x2){
+        return true;
+    }  
+    
+    return false;
 }
 
 /* 
@@ -618,7 +655,10 @@ function render() {
     
     //Collision between player and ghost
     enemies.forEach(collisionAll); //collision and update enemies 
-    
+    //Collision between player and walls.
+    if(wallCollision(player)){
+        console.log("player hit the wall");
+    }
     
     /* Update elements */
     player.update();
@@ -672,6 +712,15 @@ function setup() {
         enemies.push(new Enemy(colors[i],((i*64)+32), (i * 64)));
     }
     
+    /* Setting up walls properties */
+    upLeftCorner.x = 0+sideWallpadding;
+    upLeftCorner.y = 0+sideWallpadding;
+    bottomLeftCorner.x = 0+sideWallpadding;
+    bottomLeftCorner.y = canvas.height -sideWallpadding;
+    upRightCorner.x = canvas.width - sideWallpadding;
+    upRightCorner.y = 0+sideWallpadding;
+    bottomRightCorner.x = canvas.width - sideWallpadding;
+    bottomRightCorner.y = canvas.height - sideWallpadding;
     /* Creating walls */
     makeWalls();
     
