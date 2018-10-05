@@ -89,16 +89,32 @@ function p_update(){ //function to update player properties.
 }
 
 function p_move() { //function to do player movement 
-    if (this.headdirection == 64) { //pac-man go to left 
+    if (this.headdirection == 64 && this.sideCollision != "left") { //pac-man go to left 
+        if (this.speed == 0){
+            this.speed = this.oldSpeed;
+            this.sideCollision = undefined;
+        }
         this.x -= this.speed;
     }
-    if (this.headdirection == 96) { //pac-man go up
+    if (this.headdirection == 96 && this.sideCollision != "up") { //pac-man go up
+        if (this.speed == 0){
+            this.speed = this.oldSpeed; 
+            this.sideCollision = undefined;
+        }
         this.y -= this.speed;
     }
-    if (this.headdirection == 0) { //pac-man go to right
+    if (this.headdirection == 0 && this.sideCollision != "right") { //pac-man go to right
+        if (this.speed == 0){
+            this.speed = this.oldSpeed; 
+            this.sideCollision = undefined;
+        }
         this.x += this.speed;
     }
-    if (this.headdirection == 32) { //pac-man go down
+    if (this.headdirection == 32 && this.sideCollision != "bottom") { //pac-man go down
+        if (this.speed == 0){
+            this.speed = this.oldSpeed; 
+            this.sideCollision = undefined;
+        }
         this.y += this.speed;
     }
 
@@ -143,6 +159,8 @@ var player = { //Player object.
     pacmouth: 320, //current mouth state.
     headdirection: 0, //Current head direction.
     speed: 3, //Player speed.
+    oldSpeed: 0, //Player old speed value.
+    sideCollision: undefined, //Determines which side has collided.
     centerx: 0, //Sprite center. Used to calculate collision detection. 
     centery: 0, //Sprite center. Used to calculate collision detection.
     collisionsize: 12, //Size used to calculate collision area corners. Older value is 10.
@@ -434,20 +452,32 @@ function wallCollision(Object){
     
     //Hit left wall
     if (upLeftCorner.x >= x1 ) {
+        player.x += player.speed;
+        player.sideCollision = "left";
+        player.draw();
         return true;
     }
     //Hit up wall
     if (upLeftCorner.y >= y1) {
+        player.y += player.speed;
+        player.sideCollision = "up";
+        player.draw();
         return true;
     }
     
     //hit bottom wall
     if (bottomLeftCorner.y <= y2){
+        player.y -= player.speed;
+        player.sideCollision = "bottom";
+        player.draw();
         return true;
     }
     
     //Hit right wall
     if (upRightCorner.x <= x2){
+        player.x -= player.speed;
+        player.sideCollision = "right";
+        player.draw();
         return true;
     }  
     
@@ -642,8 +672,11 @@ function render() {
     
 
     /* Collision detection */
-    
     //Collision between wall and player(and update player)
+    if(wallCollision(player)){
+        player.oldSpeed = player.speed;
+        player.speed = 0;
+    }
     //Collision between wall and enemies(and update enemies)
     
     //Collision between dot and player
@@ -655,10 +688,6 @@ function render() {
     
     //Collision between player and ghost
     enemies.forEach(collisionAll); //collision and update enemies 
-    //Collision between player and walls.
-    if(wallCollision(player)){
-        console.log("player hit the wall");
-    }
     
     /* Update elements */
     player.update();
@@ -667,6 +696,7 @@ function render() {
     player.draw();
     enemies.forEach(drawAll);
     walls.forEach(drawAll);
+    
     
     /* Drawing basic Heads Up Display */
     context.font = "20px Verdana";
