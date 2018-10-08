@@ -666,7 +666,7 @@ function render() {
         tick = 0;
     }
     tick++;
-    /* Crdefeating canvas background and size */
+    /* Creating canvas background and size */
     context.fillStyle = "black";
     context.fillRect(0, 0, canvas.width, canvas.height);
     
@@ -729,7 +729,9 @@ function setup() {
     context = canvas.getContext('2d');
     canvas.width = 600;
     canvas.height = 400;
-
+    var size = Math.floor(window.innerHeight / 4);
+    canvas.setAttribute("style", "margin-top: " + size.toString() + "px;");
+    
     /* creating a sprite sheet */
     spriteSheet = document.getElementById("pac");
     spriteSheet.onload = checkReady();
