@@ -4,9 +4,9 @@ var context; //Used to create context elements.
 var spriteSheet; //Used to store the game sprite sheet.
 var score; //Used to store the pacman scores.
 var gscore; //Used to store the ghosts scores.
-var tick;
-var enemies = [];
-var colors = [
+var tick; //Used to control game time.
+var enemies = []; //Enemies array to create a array list of enemies.
+var colors = [ //Used colors by enemies.
     'red',
     'orange',
     'pink',
@@ -16,7 +16,7 @@ var colors = [
 var walls = []; //walls array
 var sideWallpadding = 10; //adding padding in walls. (Relative to canvas).
 /* canvas coordinates objects to make walls */
-var upLeftCorner = {
+var upLeftCorner = { 
     x: undefined,
     y: undefined
 };
@@ -32,6 +32,7 @@ var bottomRightCorner = {
     x: undefined,
     y: undefined
 };
+var gameInfo = []; //Used to store game events information relative to enemies or player defeats.
 
 /* General Helper functions */
 function canvasTurn(){
@@ -317,7 +318,8 @@ function collisionAll (element) {//verify collision between enemies and player.
                 //add score points
                 score++;    
                 //Adding defeat information
-                console.log("player defeat " + element.ghostName + " ghost");
+                var info = "player defeat " + element.ghostName + " ghost";
+                gameInfo.push(info);
             } 
         }
         else {//player "die"
@@ -327,7 +329,8 @@ function collisionAll (element) {//verify collision between enemies and player.
             player.x = myNumber(canvas.width - 100) + 50; 
             player.y = myNumber(canvas.height - 100) + 50;
             //Adding defeat information
-            console.log("Player was defeated by " + element.ghostName + " ghost");
+            var info = "Player was defeated by " + element.ghostName + " ghost";
+            gameInfo.push(info);
         }
     }
     element.update();
@@ -658,6 +661,44 @@ function powerPillTime(){
     }
 }
 
+/* Function to control game info messages */
+function info () {
+    context.font = "20px Verdana";
+    context.fillStyle = "red";
+    if (gameInfo.length != 0){ //verify game info array
+        if (tick < 500){ //control display time
+            switch(gameInfo.length) { //switch different game info array sizes and clean array
+                case 1:
+                    context.fillText(gameInfo[0], 200, 28);
+                    break;
+                case 2:
+                    context.fillText(gameInfo[0], 200, 28);
+                    context.fillText(gameInfo[1], 200, 48);
+                    break;
+                case 3:
+                    context.fillText(gameInfo[0], 200, 28);
+                    context.fillText(gameInfo[1], 200, 48);
+                    context.fillText(gameInfo[2], 200, 68);
+                    break;
+                default:
+                    gameInfo.shift(); //remove one element when the array lenght is bigger than 3
+            }
+            
+        }
+        else { //remove one element of the array after 499 ticks 
+            gameInfo.shift();
+        }
+    }
+}
+
+/* Function to create heads up display to show game info */
+function headsUpDisplay() {
+    context.font = "20px Verdana";
+    context.fillStyle = "white";
+    context.fillText("Pacman: " + score + " vs Ghosts " + gscore, 14, 28);
+    info();
+}
+
 /*  Function to render elements in canvas.
     This function rendering in order. It is work like layers. 
     First element - botton layer. Last element - top layer. */
@@ -670,6 +711,8 @@ function render() {
     context.fillStyle = "black";
     context.fillRect(0, 0, canvas.width, canvas.height);
     
+    /* Drawing basic Heads Up Display */
+    headsUpDisplay();    
 
     /* Collision detection */
     //Collision between wall and player(and update player)
@@ -697,11 +740,6 @@ function render() {
     enemies.forEach(drawAll);
     walls.forEach(drawAll);
     
-    
-    /* Drawing basic Heads Up Display */
-    context.font = "20px Verdana";
-    context.fillStyle = "white";
-    context.fillText("Pacman: " + score + " vs Ghosts " + gscore, 2, 18);
 }
 
 /* Function to play the game */
@@ -724,15 +762,15 @@ function setup() {
     gscore = 0;
     tick = 0;
     
-    /* creating the canvas */
+    /* Creating the canvas */
     canvas = document.createElement("canvas");
     context = canvas.getContext('2d');
-    canvas.width = 600;
-    canvas.height = 400;
+    canvas.width = 610;
+    canvas.height = 410;
     var size = Math.floor(window.innerHeight / 4);
     canvas.setAttribute("style", "margin-top: " + size.toString() + "px;");
     
-    /* creating a sprite sheet */
+    /* Creating a sprite sheet */
     spriteSheet = document.getElementById("pac");
     spriteSheet.onload = checkReady();
 
