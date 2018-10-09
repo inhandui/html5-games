@@ -5,6 +5,8 @@ var spriteSheet; //Used to store the game sprite sheet.
 var score; //Used to store the pacman scores.
 var gscore; //Used to store the ghosts scores.
 var tick; //Used to control game time.
+var tTime; //Total time to kill in the game.
+var timeReturn; //return to clear setInterval iterations.
 var enemies = []; //Enemies array to create a array list of enemies.
 var colors = [ //Used colors by enemies.
     'red',
@@ -661,7 +663,7 @@ function powerPillTime(){
     }
 }
 
-/* Function to control game info messages */
+/* Function to control game info messages related to defeats */
 function info () {
     context.font = "15px Verdana";
     context.fillStyle = "red";
@@ -693,26 +695,56 @@ function info () {
 
 /* Function to create heads up display to show game info */
 function headsUpDisplay() {
+    /* Game score */
     context.font = "18px Verdana";
     context.fillStyle = "white";
     context.fillText("Pacman: " + score + " vs Ghosts " + gscore, 14, 28);
-    info();
+    
+    info();//Defeat informations.
+    
+    /* Countdown display */
+    context.font = "17px Verdana"
+    context.fillStyle = "red";
+    if (tTime < 0){
+        context.fillText(0, 245, 28);
+        window.clearInterval(timeReturn);
+        alert("we are done");
+    }
+    else {
+        context.fillText(tTime, 245, 28);    
+    }
+    
 }
 
 /*  Function to render elements in canvas.
     This function rendering in order. It is work like layers. 
     First element - botton layer. Last element - top layer. */
 function render() {
+    /* Update tick control */
     if (tick >= 500){
         tick = 0;
     }
     tick++;
+    
+    
     /* Creating canvas background and size */
     context.fillStyle = "black";
     context.fillRect(0, 0, canvas.width, canvas.height);
     
     /* Drawing basic Heads Up Display */
-    headsUpDisplay();    
+    headsUpDisplay();  
+    
+     /* verify end game */
+    if (tTime < 0) {
+        if (gscore > score) {
+            resetAllGame();
+            //TODO - remove one life point.
+        }
+        else {
+            resetHUD();
+            //TODO - add one life point.
+        }
+    }
 
     /* Collision detection */
     //Collision between wall and player(and update player)
@@ -754,13 +786,47 @@ function checkReady() {
     playGame();
 }
 
+/* Function to update game countdown */
+function mTime(){
+    tTime--;
+}
+
+/* Function to reset game info */
+function clearMsgs() {
+    if(gameInfo.length != 0){
+        gameInfo = [];
+    }
+}
+
+/* Function to reset Heads Up Display (HUD) */
+function resetHUD() {
+    score = gscore = tick = 0;
+    tTime = 60;
+    timeReturn = window.setInterval(mTime, 1000);
+    clearMsgs();
+}
+
+/* Function to reset all game */
+function resetAllGame() {
+    /* Setting up player and all ghosts colors */
+    player.spawn();
+    enemies.forEach(spawnAll);    
+
+    /* setting up center */
+    player.updateCenter(); //player center
+    enemies.forEach(UpdateCAll);
+    
+    resetHUD();
+}
 
 /* Function to setup the Game Manager */
 function setup() {
     /* Set game score */
     score = 0;
     gscore = 0;
+    /* Set time controls */
     tick = 0;
+    tTime = 60; //60 seconds to make a number of kills.
     
     /* Creating the canvas */
     canvas = document.createElement("canvas");
@@ -801,4 +867,7 @@ function setup() {
     /* setting up center */
     player.updateCenter(); //player center
     enemies.forEach(UpdateCAll);
+    
+    /* Start countdown timer */
+    timeReturn = window.setInterval(mTime, 1000);
 }
