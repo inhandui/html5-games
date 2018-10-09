@@ -663,22 +663,22 @@ function powerPillTime(){
 
 /* Function to control game info messages */
 function info () {
-    context.font = "20px Verdana";
+    context.font = "15px Verdana";
     context.fillStyle = "red";
     if (gameInfo.length != 0){ //verify game info array
         if (tick < 500){ //control display time
             switch(gameInfo.length) { //switch different game info array sizes and clean array
                 case 1:
-                    context.fillText(gameInfo[0], 200, 28);
+                    context.fillText(gameInfo[0], 275, 28);
                     break;
                 case 2:
-                    context.fillText(gameInfo[0], 200, 28);
-                    context.fillText(gameInfo[1], 200, 48);
+                    context.fillText(gameInfo[0], 275, 28);
+                    context.fillText(gameInfo[1], 275, 48);
                     break;
                 case 3:
-                    context.fillText(gameInfo[0], 200, 28);
-                    context.fillText(gameInfo[1], 200, 48);
-                    context.fillText(gameInfo[2], 200, 68);
+                    context.fillText(gameInfo[0], 275, 28);
+                    context.fillText(gameInfo[1], 275, 48);
+                    context.fillText(gameInfo[2], 275, 68);
                     break;
                 default:
                     gameInfo.shift(); //remove one element when the array lenght is bigger than 3
@@ -693,7 +693,7 @@ function info () {
 
 /* Function to create heads up display to show game info */
 function headsUpDisplay() {
-    context.font = "20px Verdana";
+    context.font = "18px Verdana";
     context.fillStyle = "white";
     context.fillText("Pacman: " + score + " vs Ghosts " + gscore, 14, 28);
     info();
