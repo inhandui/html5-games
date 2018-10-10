@@ -325,6 +325,8 @@ function collisionAll (element) {//verify collision between enemies and player.
             } 
         }
         else {//player "die"
+            //Clear wall collisions
+            player.sideCollision = undefined;
             //add ghost score points
             gscore++;
             //change player position
