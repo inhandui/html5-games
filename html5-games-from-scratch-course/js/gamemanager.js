@@ -673,16 +673,16 @@ function info () {
         if (tick < 500){ //control display time
             switch(gameInfo.length) { //switch different game info array sizes and clean array
                 case 1:
-                    context.fillText(gameInfo[0], 275, 28);
+                    context.fillText(gameInfo[0], 285, 28);
                     break;
                 case 2:
-                    context.fillText(gameInfo[0], 275, 28);
-                    context.fillText(gameInfo[1], 275, 48);
+                    context.fillText(gameInfo[0], 285, 28);
+                    context.fillText(gameInfo[1], 285, 48);
                     break;
                 case 3:
-                    context.fillText(gameInfo[0], 275, 28);
-                    context.fillText(gameInfo[1], 275, 48);
-                    context.fillText(gameInfo[2], 275, 68);
+                    context.fillText(gameInfo[0], 285, 28);
+                    context.fillText(gameInfo[1], 285, 48);
+                    context.fillText(gameInfo[2], 285, 68);
                     break;
                 default:
                     gameInfo.shift(); //remove one element when the array lenght is bigger than 3
@@ -708,12 +708,12 @@ function headsUpDisplay() {
     context.font = "17px Verdana"
     context.fillStyle = "red";
     if (tTime < 0){
-        context.fillText(0, 245, 28);
+        context.fillText(0, 255, 28);
         window.clearInterval(timeReturn);
         alert("we are done");
     }
     else {
-        context.fillText(tTime, 245, 28);    
+        context.fillText(tTime, 255, 28);    
     }
     
 }
