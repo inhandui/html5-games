@@ -340,6 +340,17 @@ function collisionAll (element) {//verify collision between enemies and player.
     element.update();
 }
 
+
+function collisionG2G (element, index, array) {//verify collision between enemies.
+    for (var i=0; i<array.length; i++) {
+        if (i != index) {
+            if(collision(array[i], element)){
+                console.log("enemies collided");
+            }
+        }
+    }
+}
+
 function spawnAll(element){ //spawn enemies.
     element.spawn();
 }
@@ -755,6 +766,9 @@ function render() {
         player.speed = 0;
     }
     //Collision between wall and enemies(and update enemies)
+    
+    //Collision between enemies.
+    enemies.forEach(collisionG2G);
     
     //Collision between dot and player
     if(collision(powerdot, player)){
