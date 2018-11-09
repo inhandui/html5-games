@@ -13,7 +13,7 @@ var colors = [ //Used colors by enemies.
     'orange',
     'pink',
     'green',
-    'purple',
+    'purple'
 ];
 var walls = []; //walls array
 var sideWallpadding = 10; //adding padding in walls. (Relative to canvas).
@@ -37,7 +37,7 @@ var bottomRightCorner = {
 var gameInfo = []; //Used to store game events information relative to enemies or player defeats.
 
 /* General Helper functions */
-function canvasTurn(){
+function canvasTurn() {
     /* Ensuring that object do not go over the canvas */
     if (this.x >= (canvas.width - this.width)) { //transporting enemy from the right side of canvas to left side.
         this.x = 0;
