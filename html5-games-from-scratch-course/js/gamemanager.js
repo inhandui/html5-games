@@ -346,14 +346,16 @@ function collisionG2G (element, index, array) {//verify collision between enemie
         if (i != index) {
             if(collision(array[i], element) && ((array[i].flash != 64) && (element.flash != 64))){ //capturing no "only eyes" enemies collision
                 console.log("enemies collided - " + array[i].ghostName + " - " + element.ghostName);
+                
+                /* change directions */
                 array[i].direction_x = (-1) * array[i].direction_x;
                 array[i].direction_y = (-1) * array[i].direction_y;
-                
-                array[i].move();
                 
                 element.direction_x = (-1) * element.direction_x;
                 element.direction_y = (-1) * element.direction_y;
                 
+                /* make them move */
+                array[i].move();
                 element.move();
                 
             }
